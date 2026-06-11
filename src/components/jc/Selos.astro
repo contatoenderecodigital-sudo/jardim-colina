@@ -1,0 +1,115 @@
+---
+---
+
+<section class="stats-section">
+  <div class="stats-grid">
+
+    <div class="stat" style="--delay:0s">
+      <span class="stat-number" data-target="146" data-suffix="">0</span>
+      <span class="stat-label">Lotes Planejados</span>
+    </div>
+
+    <div class="stat-divider"></div>
+
+    <div class="stat" style="--delay:.15s">
+      <span class="stat-mini">A partir de</span>
+      <span class="stat-number" data-target="360" data-suffix="m²">0</span>
+      <span class="stat-label">Tamanho dos Lotes</span>
+    </div>
+
+    <div class="stat-divider"></div>
+
+    <div class="stat" style="--delay:.3s">
+      <span class="stat-number" data-target="72" data-suffix="x">0</span>
+      <span class="stat-label">Financiamento Direto</span>
+    </div>
+
+  </div>
+</section>
+
+<style>
+.stats-section {
+  --verde: #15312a;
+  --verde-2: #1e4a3e;
+  --ouro: #c2a15b;
+  --ouro-claro: #d8be86;
+  background:
+    radial-gradient(120% 140% at 50% 0%, rgba(194,161,91,.10), transparent 60%),
+    radial-gradient(ellipse 100% 60% at 50% 0%, #2a6050 0%, #15312a 70%);
+  padding: 84px 24px;
+  position: relative;
+  overflow: hidden;
+}
+.stats-grid {
+  max-width: 1100px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; position: relative; z-index: 1;
+}
+.stat {
+  flex: 1; text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  opacity: 0; transform: translateY(24px);
+  transition: opacity .7s ease var(--delay), transform .7s cubic-bezier(.2,.7,.3,1) var(--delay);
+}
+.stats-section.is-visible .stat { opacity: 1; transform: translateY(0); }
+
+.stat-mini {
+  font-size: .72rem; letter-spacing: .18em; text-transform: uppercase;
+  background: linear-gradient(170deg, #ecdfa8 0%, #c2a15b 55%, #d8be86 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  opacity: .85; font-weight: 600; margin-bottom: -2px;
+}
+.stat-number {
+  font-family: "Poppins", system-ui, sans-serif;
+  font-size: clamp(2.6rem, 6vw, 4.4rem); font-weight: 800; line-height: 1;
+  background: linear-gradient(170deg, #ecdfa8 0%, #c2a15b 44%, #d8be86 78%, #b08840 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  text-shadow: 0 2px 24px rgba(194,161,91,.18);
+}
+.stat-label {
+  font-size: .82rem; letter-spacing: .16em; text-transform: uppercase;
+  color: rgba(255,255,255,.72); font-weight: 500;
+}
+.stat-divider {
+  width: 1px; height: 90px; flex-shrink: 0;
+  background: linear-gradient(180deg, transparent, rgba(194,161,91,.5), transparent);
+}
+
+@media (max-width: 680px) {
+  .stats-grid { flex-direction: column; gap: 40px; }
+  .stat-divider { width: 120px; height: 1px; background: linear-gradient(90deg, transparent, rgba(194,161,91,.5), transparent); }
+}
+</style>
+
+<script is:inline>
+(function(){
+  const section = document.querySelector('.stats-section');
+  if(!section) return;
+
+  function animate(el){
+    const target = +el.dataset.target;
+    const suffix = el.dataset.suffix || '';
+    const dur = 1600;
+    const start = performance.now();
+    function tick(now){
+      const p = Math.min((now - start) / dur, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(target * eased) + suffix;
+      if(p < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if(e.isIntersecting){
+        section.classList.add('is-visible');
+        section.querySelectorAll('.stat-number').forEach(animate);
+        io.disconnect();
+      }
+    });
+  }, { threshold: .4 });
+
+  io.observe(section);
+})();
+</script>

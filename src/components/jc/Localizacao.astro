@@ -1,0 +1,73 @@
+---
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import localDrone from '~/assets/jardimcolina/horizonte.jpg';
+
+const proximidades = [
+  { titulo: 'Aeroporto João Winckler', desc: 'a poucos minutos, com fácil acesso', icon: 'tabler:plane' },
+  { titulo: 'Centro de Xanxerê', desc: 'comércio, serviços e escolas próximos', icon: 'tabler:building-store' },
+  { titulo: 'Malha urbana consolidada', desc: 'integrado à cidade, não isolado', icon: 'tabler:map-2' },
+  { titulo: 'Vista para o skyline da cidade', desc: 'de frente para o horizonte de Xanxerê', icon: 'tabler:building-skyscraper' },
+];
+
+const mapSrc =
+  'https://www.google.com/maps?q=-26.87187,-52.37572&z=14&output=embed';
+---
+
+<section id="localizacao" class="bg-paper-2">
+  <div class="mx-auto max-w-7xl px-5 pb-20 pt-12 md:px-8 md:pb-28 md:pt-16">
+    <div class="reveal mx-auto max-w-2xl text-center ">
+      <p class="eyebrow mb-4">Localização</p>
+      <h2 class="text-2xl leading-tight text-ink sm:text-3xl md:text-4xl">
+        Integrado à cidade, de frente pro horizonte.
+      </h2>
+      <p class="mt-5 text-[0.95rem] leading-[1.75] text-ink-soft">
+        Você fica perto do centro e do aeroporto, dentro da malha urbana de Xanxerê. O melhor dos dois mundos:
+        a praticidade da cidade e a tranquilidade de um bairro planejado.
+      </p>
+    </div>
+
+    <!-- Faixa larga drone do entorno -->
+    <div class="reveal reveal-zoom mt-10 overflow-hidden rounded-[24px]">
+      <Image
+        src={localDrone}
+        alt="Vista aérea do entorno do Jardim Colina mostrando a integração com a cidade de Xanxerê"
+        widths={[768, 1280, 1920]}
+        sizes="100vw"
+        format="webp"
+        quality={72}
+        loading="lazy"
+        class="aspect-[16/8] w-full object-cover"
+      />
+    </div>
+
+    <div class="reveal-children mt-12 grid gap-10 lg:grid-cols-2 lg:gap-14">
+      <!-- Mapa -->
+      <div class="overflow-hidden rounded-[24px]">
+        <iframe
+          title="Mapa da localização do Loteamento Jardim Colina em Xanxerê SC"
+          src={mapSrc}
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          class="h-[340px] w-full border-0 md:h-full md:min-h-[360px]"></iframe>
+      </div>
+
+      <!-- Proximidades -->
+      <ul class="flex flex-col">
+        {
+          proximidades.map((p, i) => (
+            <li class:list={['py-5', i > 0 && 'border-t border-gold/25']}>
+              <div class="flex items-center gap-4">
+                <Icon name={p.icon} class="h-7 w-7 flex-none text-gold" aria-hidden="true" />
+                <div>
+                  <p class="font-display text-base font-bold text-ink md:text-xl">{p.titulo}</p>
+                  <p class="mt-1 text-sm text-ink-mute md:text-base">{p.desc}</p>
+                </div>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,29 @@
+---
+import { waHref } from '~/components/jc/data';
+---
+
+<section class="relative overflow-hidden bg-forest text-white" style="background:radial-gradient(ellipse 100% 60% at 50% 0%, #2a6050 0%, #15312a 70%);">
+  <!-- marca d'água da folha grande -->
+  <svg
+    viewBox="0 0 24 24"
+    class="pointer-events-none absolute -left-16 -bottom-20 h-[560px] w-[560px] text-leaf"
+    style="opacity:0.06"
+    fill="currentColor"
+    aria-hidden="true"
+  >
+    <path d="M12 22c0-8 0-12 9-17-1.5 7-3 11-9 12.5 0 0 6-1.5 9-6-1.5 9-6 11-9 10.5Z"></path>
+  </svg>
+
+  <div class="reveal-children relative mx-auto max-w-3xl px-5 py-32 text-center md:px-8 md:py-44">
+    <p class="eyebrow mb-5">Jardim Colina · Xanxerê SC</p>
+    <h2 class="text-3xl leading-tight text-white sm:text-4xl md:text-5xl">
+      Garanta seu lugar no ponto alto de Xanxerê.
+    </h2>
+    <p class="mx-auto mt-5 max-w-xl text-lg text-white/80">
+      Fale agora com um consultor pelo WhatsApp. Atendimento rápido para tirar suas dúvidas e mostrar as condições.
+    </p>
+    <a href={waHref()} target="_blank" rel="noopener noreferrer" class="btn-wa mt-9 text-lg !px-9 !py-4">
+      Ver os lotes e valores no WhatsApp
+    </a>
+  </div>
+</section>

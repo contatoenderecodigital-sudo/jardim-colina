@@ -1,0 +1,81 @@
+---
+import { Image } from 'astro:assets';
+// antes = foto real de drone (terreno hoje) | depois = render do loteamento pronto.
+// Par alinhado pelo Sandro (mesmo enquadramento, mesmo pôr do sol).
+import depois from '~/assets/jardimcolina/depois.jpg';
+import antes from '~/assets/jardimcolina/antes.jpg';
+---
+
+<section id="antes-depois" class="relative overflow-hidden bg-forest text-white" style="background:radial-gradient(ellipse 100% 60% at 50% 0%, #2a6050 0%, #15312a 70%);">
+  <div class="relative mx-auto max-w-6xl px-5 pb-20 pt-12 md:px-8 md:pb-28 md:pt-16">
+    <div class="reveal-children mx-auto max-w-2xl text-center">
+      <p class="eyebrow mb-4">Antes e depois</p>
+      <h2 class="text-3xl leading-tight text-white sm:text-4xl md:text-5xl">
+        Veja o terreno virar bairro.
+      </h2>
+      <p class="mx-auto mt-5 max-w-xl text-[0.95rem] leading-[1.75] text-white/75">
+        De um lado o terreno hoje, do outro o Jardim Colina pronto, do jeito que ele foi projetado.<br />Arraste e compare:
+      </p>
+    </div>
+
+    <div
+      id="ba"
+      class="ba reveal mt-12 select-none"
+      style="--pos:50%"
+      role="group"
+      aria-label="Comparação antes e depois do Loteamento Jardim Colina"
+    >
+      <Image
+        src={depois}
+        alt="Render do Loteamento Jardim Colina pronto, com ruas e casas"
+        widths={[768, 1280, 1920]}
+        sizes="100vw"
+        format="webp"
+        quality={78}
+        loading="lazy"
+        class="ba-img"
+      />
+      <Image
+        src={antes}
+        alt="Foto real de drone do terreno do Jardim Colina hoje"
+        widths={[768, 1280, 1920]}
+        sizes="100vw"
+        format="webp"
+        quality={78}
+        loading="lazy"
+        class="ba-img ba-top"
+      />
+
+      <span class="ba-label left-4">Hoje</span>
+      <span class="ba-label right-4">Pronto</span>
+
+      <div class="ba-line" aria-hidden="true"></div>
+      <div class="ba-handle" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 6l-4 6 4 6M15 6l4 6-4 6" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+      </div>
+
+      <input
+        id="ba-range"
+        class="ba-range"
+        type="range"
+        min="0"
+        max="100"
+        value="50"
+        aria-label="Arraste para comparar antes e depois"
+      />
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  (() => {
+    const ba = document.getElementById('ba');
+    const range = document.getElementById('ba-range');
+    if (!ba || !range) return;
+    const set = () => ba.style.setProperty('--pos', range.value + '%');
+    range.addEventListener('input', set);
+    set();
+  })();
+</script>

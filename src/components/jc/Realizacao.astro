@@ -1,0 +1,19 @@
+---
+import { Image } from 'astro:assets';
+import santafeColor from '~/assets/jardimcolina/brand/santafe-logo.png';
+---
+
+<section class="border-b border-ink/5 bg-paper-2">
+  <div class="reveal mx-auto max-w-4xl px-5 pb-28 pt-16 text-center md:pb-40 md:pt-20">
+    <p class="text-[0.62rem] uppercase tracking-[0.28em] text-ink-mute">Uma realização</p>
+
+    <div class="mt-5 flex justify-center">
+      <Image
+        src={santafeColor}
+        alt="Santafé Imobiliária e Incorporadora"
+        class="h-12 w-auto md:h-14"
+        loading="lazy"
+      />
+    </div>
+  </div>
+</section>

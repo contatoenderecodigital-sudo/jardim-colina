@@ -1,0 +1,122 @@
+---
+import { Image } from 'astro:assets';
+import { NAV, waHref } from '~/components/jc/data';
+import brandLogo from '~/assets/jardimcolina/brand/jc-logo.png';
+import brandLogoWhite from '~/assets/jardimcolina/brand/jc-logo-white.png';
+---
+
+<header id="jc-header" class="fixed inset-x-0 top-0 z-40">
+  <div class="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 md:px-8">
+
+    <!-- Brand — duas versões: white no topo, colorida ao rolar -->
+    <a href="#top" class="jc-brand relative flex h-9 w-auto items-center" aria-label="Jardim Colina início">
+      <Image
+        src={brandLogoWhite}
+        alt="Loteamento Jardim Colina"
+        class="jc-logo-white absolute h-8 w-auto md:h-9 transition-opacity duration-400"
+        loading="eager"
+      />
+      <Image
+        src={brandLogo}
+        alt="Loteamento Jardim Colina"
+        class="jc-logo-color h-8 w-auto md:h-9 transition-opacity duration-400"
+        loading="eager"
+      />
+    </a>
+
+    <!-- Desktop nav -->
+    <nav class="hidden items-center gap-7 lg:flex" aria-label="Navegação principal">
+      {
+        NAV.map((item) => (
+          <a
+            href={item.href}
+            class="jc-nav-link text-sm font-medium transition duration-300 hover:text-gold-soft"
+          >
+            {item.label}
+          </a>
+        ))
+      }
+      <a
+        href={waHref()}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="jc-header-cta btn-pill !py-2.5 !px-5 !text-sm font-semibold transition-all duration-300"
+      >
+        Falar com consultor
+      </a>
+    </nav>
+
+    <!-- Mobile toggle -->
+    <button
+      id="jc-menu-btn"
+      type="button"
+      aria-label="Abrir menu"
+      aria-expanded="false"
+      aria-controls="jc-mobile-menu"
+      class="jc-menu-icon lg:hidden"
+    >
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round"></path>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<!-- Mobile menu -->
+<div id="jc-mobile-menu" class="fixed inset-0 z-50 hidden flex-col bg-paper-2 lg:hidden">
+  <div class="flex items-center justify-between px-6 pt-6">
+    <Image src={brandLogo} alt="Loteamento Jardim Colina" class="h-8 w-auto" loading="eager" />
+    <button id="jc-menu-close" type="button" aria-label="Fechar menu" class="text-ink">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+        <path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"></path>
+      </svg>
+    </button>
+  </div>
+  <nav class="flex flex-1 flex-col items-center justify-center gap-1 px-8" aria-label="Navegação mobile">
+    {
+      NAV.map((item, i) => (
+        <a
+          href={item.href}
+          class:list={[
+            'jc-mobile-link w-full max-w-xs py-4 text-center font-sans text-lg font-medium tracking-wide text-ink transition hover:text-forest',
+            i > 0 && 'border-t border-gold/20',
+          ]}
+        >
+          {item.label}
+        </a>
+      ))
+    }
+  </nav>
+  <div class="px-6 pb-10 text-center">
+    <a href={waHref()} target="_blank" rel="noopener noreferrer" class="btn-wa w-full">
+      Falar com consultor
+    </a>
+    <p class="mt-5 text-xs uppercase tracking-[0.14em] text-ink-mute">
+      Santafé Imobiliária e Incorporadora · Xanxerê SC
+    </p>
+  </div>
+</div>
+
+<script is:inline>
+  (() => {
+    const btn = document.getElementById('jc-menu-btn');
+    const close = document.getElementById('jc-menu-close');
+    const menu = document.getElementById('jc-mobile-menu');
+    if (!btn || !menu) return;
+    const open = () => {
+      menu.classList.remove('hidden');
+      menu.classList.add('flex');
+      btn.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+    };
+    const hide = () => {
+      menu.classList.add('hidden');
+      menu.classList.remove('flex');
+      btn.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    };
+    btn.addEventListener('click', open);
+    close?.addEventListener('click', hide);
+    menu.querySelectorAll('.jc-mobile-link').forEach((a) => a.addEventListener('click', hide));
+  })();
+</script>

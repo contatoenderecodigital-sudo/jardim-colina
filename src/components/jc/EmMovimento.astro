@@ -1,0 +1,90 @@
+---
+// Seção "Projeto em movimento": vídeo de drone com a evolução do loteamento
+// (do terreno às ruas abertas). Autoplay mudo em loop (comporta como GIF, sem controles),
+// com botão discreto de ampliar (tela cheia) no canto.
+import { Icon } from 'astro-icon/components';
+---
+
+<section id="movimento" class="relative overflow-hidden bg-forest bg-gradient-to-b from-forest to-forest-2 text-white">
+  <!-- marca d'água da folha -->
+  <svg
+    viewBox="0 0 24 24"
+    class="pointer-events-none absolute -left-16 -top-16 h-[440px] w-[440px] text-leaf"
+    style="opacity:0.05"
+    fill="currentColor"
+    aria-hidden="true"
+  >
+    <path d="M12 22c0-8 0-12 9-17-1.5 7-3 11-9 12.5 0 0 6-1.5 9-6-1.5 9-6 11-9 10.5Z"></path>
+  </svg>
+
+  <div class="relative mx-auto max-w-6xl px-5 pb-20 pt-12 md:px-8 md:pb-28 md:pt-16">
+    <div class="reveal-children mx-auto max-w-2xl text-center">
+      <p class="eyebrow mb-4">Projeto em Movimento</p>
+      <h2 class="text-3xl leading-tight text-white sm:text-4xl md:text-5xl">
+        Do terreno ao bairro, diante dos seus olhos.
+      </h2>
+      <p class="mx-auto mt-5 max-w-xl text-lg text-white/75">
+        As ruas abrindo, as quadras tomando forma. O Jardim Colina deixa de ser um plano e vira um lugar de verdade
+        para a sua família morar.
+      </p>
+    </div>
+
+    <!-- Card do vídeo -->
+    <div class="reveal reveal-zoom mt-12 md:mt-14">
+      <div
+        class="group relative overflow-hidden rounded-[28px] border border-gold/25 bg-black/30 shadow-2xl ring-1 ring-white/5"
+      >
+        <span
+          class="pointer-events-none absolute left-3 top-3 z-10 inline-flex items-center gap-1.5 rounded-full border border-gold/50 bg-forest/85 px-3 py-1 font-display text-[0.55rem] uppercase tracking-[0.12em] text-gold-soft backdrop-blur-sm md:left-6 md:top-6 md:gap-2 md:px-4 md:py-2 md:text-[0.7rem] md:tracking-[0.22em]"
+        >
+          <span class="h-1.5 w-1.5 animate-pulse rounded-full bg-leaf md:h-2 md:w-2"></span>
+          Ganhando vida
+        </span>
+        <video
+          id="mov-video"
+          class="aspect-[4/3] w-full cursor-zoom-in object-cover sm:aspect-video"
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="metadata"
+          poster="/video/movimento-poster.jpg"
+          aria-label="Vídeo aéreo da evolução das obras do Loteamento Jardim Colina"
+        >
+          <source src="/video/movimento.mp4" type="video/mp4" />
+        </video>
+        <!-- botão discreto de ampliar (tela cheia) -->
+        <button
+          id="mov-expand"
+          type="button"
+          aria-label="Ampliar vídeo em tela cheia"
+          class="absolute right-3 top-3 z-10 inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/25 bg-forest/55 text-white/90 backdrop-blur-sm transition hover:bg-forest/80 md:right-6 md:top-6"
+        >
+          <Icon name="tabler:maximize" class="h-4 w-4" aria-hidden="true" />
+        </button>
+        <!-- vinheta sutil pra dar profundidade -->
+        <div
+          class="pointer-events-none absolute inset-0"
+          style="background: radial-gradient(120% 120% at 50% 100%, rgba(21,49,42,0.45) 0%, rgba(21,49,42,0) 55%);"
+          aria-hidden="true"
+        >
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  (() => {
+    const v = document.getElementById('mov-video');
+    const btn = document.getElementById('mov-expand');
+    if (!v) return;
+    const go = () => {
+      if (v.requestFullscreen) v.requestFullscreen();
+      else if (v.webkitEnterFullscreen) v.webkitEnterFullscreen();
+      else if (v.webkitRequestFullscreen) v.webkitRequestFullscreen();
+    };
+    btn?.addEventListener('click', go);
+    v.addEventListener('click', go);
+  })();
+</script>

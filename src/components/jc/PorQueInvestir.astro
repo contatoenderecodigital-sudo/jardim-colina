@@ -1,0 +1,52 @@
+---
+import { Icon } from 'astro-icon/components';
+
+const cards = [
+  {
+    icon: 'tabler:tree',
+    titulo: 'Terra não se multiplica',
+    texto:
+      'Enquanto quase tudo é produzido em série, terreno é finito. Por isso o lote historicamente é o ativo que mais preserva e valoriza o patrimônio da família.',
+  },
+  {
+    icon: 'tabler:trending-up',
+    titulo: 'No lançamento, o melhor preço',
+    texto:
+      'Comprar no início é entrar na tabela mais baixa. A cada etapa de obra entregue, o valor do lote tende a ser reajustado. Quem entra agora, entra na frente.',
+  },
+  {
+    icon: 'tabler:building-skyscraper',
+    titulo: 'Onde a cidade cresce',
+    texto:
+      'Um bairro planejado dentro da malha urbana de Xanxerê, perto do centro e do aeroporto. Você investe no caminho da expansão da cidade.',
+  },
+];
+---
+
+<section id="investir" class="bg-paper">
+  <div class="mx-auto max-w-7xl px-5 pb-20 pt-12 md:px-8 md:pb-28 md:pt-16">
+    <div class="reveal mx-auto max-w-2xl text-center">
+      <p class="eyebrow mb-4">Investimento</p>
+      <h2 class="text-4xl leading-tight text-ink md:text-5xl">
+        Por que um lote é o melhor momento do seu dinheiro.
+      </h2>
+      <p class="mx-auto mt-5 max-w-xl text-[0.95rem] leading-[1.75] text-ink-soft">
+        Não é só onde a sua família vai morar.<br />É onde o seu dinheiro trabalha enquanto o bairro nasce.
+      </p>
+    </div>
+
+    <div class="reveal-children mt-12 grid gap-6 md:grid-cols-3">
+      {
+        cards.map((c) => (
+          <div class="rounded-[22px] border border-ink/5 bg-paper-2 p-7 shadow-sm text-center">
+            <div class="flex justify-center">
+              <Icon name={c.icon} class="h-9 w-9 text-gold" aria-hidden="true" />
+            </div>
+            <h3 class="mt-4 font-display text-xl text-ink">{c.titulo}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-ink-soft">{c.texto}</p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

@@ -1,0 +1,10 @@
+---
+// Selo "Projeção ilustrativa" pra colocar sobre blocos de render.
+// O container pai precisa ter position: relative.
+interface Props {
+  texto?: string;
+}
+const { texto = 'Projeção ilustrativa' } = Astro.props;
+---
+
+<span class="selo-proj">{texto}</span>

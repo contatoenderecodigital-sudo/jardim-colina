@@ -1,0 +1,91 @@
+---
+import { Image } from 'astro:assets';
+import { NAV, CONTATO, waHref } from '~/components/jc/data';
+import brandLogo from '~/assets/jardimcolina/brand/jc-logo.png';
+import santafeLogo from '~/assets/jardimcolina/brand/santafe-logo.png';
+---
+
+<footer class="bg-paper-2 text-ink-soft">
+  <div class="mx-auto max-w-7xl px-5 py-16 md:px-8">
+    <div class="grid gap-12 text-center md:grid-cols-[1.3fr_1fr_1.2fr] md:text-left">
+      <!-- Marca + slogan + realização -->
+      <div class="flex flex-col items-center md:items-start">
+        <Image src={brandLogo} alt="Loteamento Jardim Colina" class="h-11 w-auto" loading="lazy" />
+        <p class="mt-4 max-w-xs text-base text-ink-soft">
+          O ponto alto do seu Bem-estar.
+        </p>
+
+        <div class="mt-8 flex flex-col items-center md:items-start">
+          <p class="eyebrow mb-3 !text-forest">Uma realização</p>
+          <Image
+            src={santafeLogo}
+            alt="Santafé Imobiliária e Incorporadora"
+            class="h-12 w-auto"
+            loading="lazy"
+          />
+          <p class="mt-3 max-w-xs text-sm leading-relaxed text-ink-mute">
+            Imobiliária e incorporadora de Xanxerê.<br />Mais de uma década de mercado e a maior carteira de imóveis da cidade. {CONTATO.creci}.
+          </p>
+        </div>
+      </div>
+
+      <!-- Navegação -->
+      <nav aria-label="Navegação do rodapé">
+        <p class="eyebrow mb-4 !text-forest">Navegação</p>
+        <ul class="flex flex-col gap-2.5 text-sm">
+          {NAV.map((item) => (
+            <li>
+              <a href={item.href} class="transition hover:text-forest">{item.label}</a>
+            </li>
+          ))}
+          <li class="mt-2 pt-2 border-t border-ink/10">
+            <a href="/area-corretor" class="transition hover:text-forest">Área do Corretor</a>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Contato -->
+      <div>
+        <p class="eyebrow mb-4 !text-forest">Contato</p>
+        <ul class="flex flex-col gap-3 text-sm">
+          <li>{CONTATO.endereco}</li>
+          <li>
+            <a href={waHref()} target="_blank" rel="noopener noreferrer" class="transition hover:text-forest">
+              Falar pelo WhatsApp
+            </a>
+          </li>
+          <li>
+            <a
+              href={CONTATO.insta}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="transition hover:text-forest"
+              aria-label="Instagram da Santafé Imobiliária"
+            >
+              Instagram {CONTATO.instaHandle}
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-14 border-t border-ink/10 pt-7">
+      <div class="flex flex-col gap-3 text-center text-xs text-ink-mute sm:flex-row sm:items-center sm:justify-between sm:text-left">
+        <p>
+          Loteamento em processo de registro. Imagens ilustrativas. {CONTATO.creci}.<br class="sm:hidden" /> Uma realização Santafé Imobiliária e Incorporadora.
+        </p>
+        <p>
+          Feito por
+          <a
+            href="https://www.instagram.com/endereco.digital/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="font-semibold text-gold transition hover:text-bronze"
+          >
+            @endereco.digital
+          </a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>

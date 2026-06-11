@@ -1,0 +1,34 @@
+---
+import { Image } from 'astro:assets';
+import implant from '~/assets/jardimcolina/implantacao-real.png';
+---
+
+<section id="implantacao" class="bg-paper-2">
+  <div class="mx-auto max-w-7xl px-5 pb-20 pt-12 md:px-8 md:pb-28 md:pt-16">
+    <div class="reveal mx-auto max-w-2xl text-center ">
+      <p class="eyebrow mb-4">O Projeto</p>
+      <h2 class="text-4xl leading-tight text-ink md:text-5xl">
+        Um bairro desenhado com cuidado, lote a lote.
+      </h2>
+      <p class="mt-5 text-[0.95rem] leading-[1.75] text-ink-soft">
+        Quadras arborizadas, vias bem distribuídas e lotes a partir de 360 m². Cada detalhe foi planejado para você
+        escolher o lugar certo para construir o seu projeto de vida.
+      </p>
+    </div>
+
+    <!-- Implantação dos lotes sobre o terreno real -->
+    <figure class="reveal reveal-zoom relative mt-12 overflow-hidden rounded-[24px] bg-paper shadow-sm">
+      <Image
+        src={implant}
+        alt="Implantação do Loteamento Jardim Colina: os lotes planejados posicionados sobre o terreno real, integrados à cidade de Xanxerê"
+        widths={[768, 1400, 2400]}
+        sizes="(max-width: 1024px) 100vw, 80vw"
+        format="webp"
+        quality={80}
+        loading="lazy"
+        class="w-full object-contain"
+      />
+    </figure>
+
+  </div>
+</section>

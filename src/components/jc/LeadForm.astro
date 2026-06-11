@@ -1,0 +1,168 @@
+---
+import { Image } from 'astro:assets';
+import heroImg from '~/assets/jardimcolina/hero-pordosol.png';
+import { WA_NUMBER, LEADS_ENDPOINT } from '~/components/jc/data';
+---
+
+<section id="contato" class="bg-paper">
+  <div class="mx-auto max-w-7xl px-5 pb-20 pt-12 md:px-8 md:pb-28 md:pt-16">
+    <div class="grid gap-10 lg:grid-cols-2 lg:items-stretch lg:gap-16">
+      <!-- texto + formulário -->
+      <div class="reveal text-center md:text-left">
+        <p class="eyebrow mb-4">Lista de prioridade</p>
+        <h2 class="text-4xl leading-tight text-ink md:text-5xl">
+          Garanta prioridade no lançamento.
+        </h2>
+        <p class="mt-5 max-w-lg text-[0.95rem] leading-[1.75] text-ink-soft mx-auto md:mx-0">
+          Deixe seu contato e um consultor fala com você pelo WhatsApp, com as condições e os melhores lotes.
+          Rápido e sem compromisso.
+        </p>
+
+        <form id="lead-form" class="mt-8 flex flex-col gap-4">
+          <div>
+            <label for="lf-nome" class="sr-only">Nome</label>
+            <input id="lf-nome" name="nome" type="text" required autocomplete="name" placeholder="Seu nome" class="jc-input" />
+          </div>
+          <div>
+            <label for="lf-wpp" class="sr-only">WhatsApp com DDD</label>
+            <input
+              id="lf-wpp"
+              name="whatsapp"
+              type="tel"
+              required
+              inputmode="numeric"
+              autocomplete="tel"
+              maxlength="15"
+              placeholder="WhatsApp com DDD"
+              class="jc-input"
+            />
+          </div>
+          <div>
+            <label for="lf-email" class="sr-only">E-mail (opcional)</label>
+            <input
+              id="lf-email"
+              name="email"
+              type="email"
+              autocomplete="email"
+              placeholder="Seu melhor e-mail (opcional)"
+              class="jc-input"
+            />
+          </div>
+          <div>
+            <label for="lf-obj" class="sr-only">Qual o seu objetivo? (opcional)</label>
+            <select id="lf-obj" name="objetivo" class="jc-input">
+              <option value="" selected>Qual o seu objetivo? (opcional)</option>
+              <option>Morar</option>
+              <option>Investir</option>
+              <option>Ainda decidindo</option>
+            </select>
+          </div>
+          <div>
+            <label for="lf-pag" class="sr-only">Forma de pagamento de interesse</label>
+            <select id="lf-pag" name="pagamento" class="jc-input">
+              <option value="" selected>Forma de pagamento (opcional)</option>
+              <option>À vista</option>
+              <option>Financiamento direto</option>
+            </select>
+          </div>
+
+          <label class="flex items-start gap-3 text-left text-sm text-ink-mute mx-auto md:mx-0 w-fit">
+            <input id="lf-lgpd" type="checkbox" required class="mt-0.5 h-4 w-4 flex-none accent-[#15312a]" />
+            <span>
+              Autorizo a Santafé a entrar em contato sobre o Jardim Colina pelo WhatsApp. Seus dados são usados
+              somente para isso.
+            </span>
+          </label>
+
+          <button type="submit" class="btn-wa mt-2 w-full">Quero falar com prioridade</button>
+        </form>
+
+        <!-- estado de sucesso -->
+        <div
+          id="lead-ok"
+          class="mt-8 hidden rounded-[20px] border border-forest/20 bg-paper-2 p-7 text-center"
+        >
+          <p class="font-display text-2xl text-forest">Recebemos seu contato!</p>
+          <p class="mt-2 text-ink-soft">
+            Abrimos o WhatsApp para você falar agora com um consultor. Se não abriu, toque no botão abaixo.
+          </p>
+          <a id="lead-wa" href="#" target="_blank" rel="noopener noreferrer" class="btn-wa mt-5">
+            Abrir o WhatsApp
+          </a>
+        </div>
+      </div>
+
+      <!-- imagem -->
+      <div class="reveal reveal-zoom hidden overflow-hidden rounded-[24px] lg:block">
+        <Image
+          src={heroImg}
+          alt="Vista aérea do Loteamento Jardim Colina ao pôr do sol, com o horizonte de Xanxerê ao fundo"
+          widths={[600, 900, 1200]}
+          sizes="50vw"
+          format="webp"
+          quality={74}
+          loading="lazy"
+          class="h-full w-full object-cover"
+        />
+      </div>
+    </div>
+  </div>
+
+  <script define:vars={{ waNumber: WA_NUMBER, endpoint: LEADS_ENDPOINT }}>
+    (() => {
+      const form = document.getElementById('lead-form');
+      const ok = document.getElementById('lead-ok');
+      const waBtn = document.getElementById('lead-wa');
+      if (!form) return;
+
+      // máscara de telefone BR: (XX) XXXXX-XXXX, no máximo 11 dígitos
+      const wpp = form.whatsapp;
+      wpp.addEventListener('input', () => {
+        const d = wpp.value.replace(/\D/g, '').slice(0, 11);
+        let out = '';
+        if (d.length > 0) out = '(' + d.slice(0, 2);
+        if (d.length >= 2) out += ') ' + d.slice(2, 7);
+        if (d.length >= 7) out += '-' + d.slice(7, 11);
+        wpp.value = out;
+      });
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (!form.reportValidity()) return;
+
+        const nome = form.nome.value.trim();
+        const whatsapp = form.whatsapp.value.trim();
+        const email = form.email.value.trim();
+        const objetivo = form.objetivo.value;
+        const pagamento = form.pagamento.value;
+
+        // mensagem com qualificação + origem (pro agente de IA abrir já contextualizado)
+        let msg = `Olá! Vim pelo site do Loteamento Jardim Colina. Meu nome é ${nome}.`;
+        if (objetivo) msg += ` Meu objetivo é ${objetivo}.`;
+        if (pagamento) msg += ` Forma de pagamento: ${pagamento}.`;
+        msg += ` Quero saber mais sobre os lotes e as condições.`;
+        const wa = `https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`;
+
+        // 1) salva o lead na planilha (se o endpoint estiver configurado)
+        if (endpoint) {
+          const body = new URLSearchParams({
+            nome,
+            whatsapp,
+            email,
+            objetivo,
+            pagamento,
+            origem: 'site-formulario',
+          });
+          fetch(endpoint, { method: 'POST', mode: 'no-cors', body }).catch(() => {});
+        }
+
+        // 2) abre o WhatsApp já preenchido (dentro do gesto do envio)
+        window.open(wa, '_blank');
+
+        // 3) salva a URL personalizada e redireciona para a página de obrigado
+        sessionStorage.setItem('jc_wa', wa);
+        window.location.href = '/obrigado';
+      });
+    })();
+  </script>
+</section>

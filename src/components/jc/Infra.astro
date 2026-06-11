@@ -1,0 +1,86 @@
+---
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import vias from '~/assets/jardimcolina/infra-vias.png';
+import casas from '~/assets/jardimcolina/infra-casas.jpg';
+
+const itens = [
+  { texto: 'Pavimentação asfáltica', icon: 'tabler:road' },
+  { texto: 'Iluminação pública em LED', icon: 'tabler:bulb' },
+  { texto: 'Rede de água e esgoto', icon: 'tabler:droplet' },
+  { texto: 'Guias e calçadas', icon: 'tabler:walk' },
+  { texto: 'Arborização viária', icon: 'tabler:tree' },
+];
+---
+
+<section id="infra" class="relative overflow-hidden bg-forest text-white" style="background:radial-gradient(ellipse 100% 60% at 50% 0%, #2a6050 0%, #15312a 70%);">
+  <!-- marca d'água da folha -->
+  <svg
+    viewBox="0 0 24 24"
+    class="pointer-events-none absolute -right-10 top-1/2 h-[420px] w-[420px] -translate-y-1/2 text-leaf"
+    style="opacity:0.06"
+    fill="currentColor"
+    aria-hidden="true"
+  >
+    <path d="M12 22c0-8 0-12 9-17-1.5 7-3 11-9 12.5 0 0 6-1.5 9-6-1.5 9-6 11-9 10.5Z"></path>
+  </svg>
+
+  <div class="relative mx-auto max-w-7xl px-5 pb-20 pt-12 md:px-8 md:pb-28 md:pt-16">
+    <!-- cabeçalho centralizado -->
+    <div class="reveal mx-auto max-w-2xl text-center">
+      <p class="eyebrow mb-4">Estrutura</p>
+      <h2 class="text-4xl leading-tight text-white md:text-5xl">
+        Infraestrutura planejada<br />para construir<br class="md:hidden" /> com segurança.
+      </h2>
+      <p class="mx-auto mt-5 max-w-xl text-[0.95rem] leading-[1.75] text-white/75">
+        Você investe num lote com toda a base prevista no projeto. Tudo pensado para o seu sonho começar com o pé
+        direito.
+      </p>
+    </div>
+
+    <!-- render das ruas + painel de itens, mesma altura -->
+    <div class="reveal-children mt-12 grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-stretch lg:gap-8">
+      <div class="relative overflow-hidden rounded-[24px] lg:h-full">
+        <Image
+          src={vias}
+          alt="Render das ruas do Jardim Colina com casas, calçadas e pavimentação"
+          widths={[700, 1100, 1600]}
+          sizes="(max-width: 1024px) 100vw, 55vw"
+          format="webp"
+          quality={80}
+          loading="lazy"
+          class="aspect-[16/10] w-full object-cover lg:aspect-auto lg:h-full"
+        />
+      </div>
+
+      <!-- painel dos itens de infraestrutura -->
+      <div class="flex flex-col justify-center rounded-[24px] border border-white/10 bg-white/[0.04] p-7 md:p-9">
+        <ul class="flex flex-col">
+          {
+            itens.map((item, i) => (
+              <li class:list={['flex items-center gap-4 py-4', i > 0 && 'border-t border-white/10']}>
+                <Icon name={item.icon} class="h-7 w-7 flex-none text-gold" aria-hidden="true" />
+                <span class="font-display text-lg md:text-xl">{item.texto}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+
+    <!-- faixa larga: render aéreo das quadras -->
+    <figure class="reveal reveal-zoom relative mt-6 overflow-hidden rounded-[24px] lg:mt-8">
+      <Image
+        src={casas}
+        alt="Render aéreo das quadras, ruas e lotes do Loteamento Jardim Colina"
+        widths={[768, 1280, 1900]}
+        sizes="100vw"
+        format="webp"
+        quality={80}
+        loading="lazy"
+        class="aspect-[16/7] w-full object-cover"
+      />
+    </figure>
+
+  </div>
+</section>

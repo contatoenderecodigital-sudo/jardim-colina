@@ -1,0 +1,145 @@
+---
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import { CONTATO } from '~/components/jc/data';
+import logoSantafe from '~/assets/jardimcolina/brand/santafe-logo.png';
+import escritorio from '~/assets/jardimcolina/escritorio.jpg';
+
+const provas = [
+  { numero: '13 anos', label: 'de mercado em Xanxerê' },
+  { numero: 'CRECI', label: 'J3799' },
+];
+
+const depoimentos = [
+  {
+    texto: 'Ótimo atendimento. Meu corretor, o Dado, é um excelente profissional. Recomendo muito.',
+    nome: 'Marilei Diehl',
+    fonte: 'Avaliação no Google',
+  },
+  {
+    texto: 'Uma imobiliária de referência, com ótimos profissionais e atendimento excelente.',
+    nome: 'Aline Dàl Zot Rauber',
+    fonte: 'Avaliação no Google',
+  },
+  {
+    texto: 'Empresa de confiança, a melhor que já vi na região. Recomendo de olhos fechados.',
+    nome: 'Vilmar Mendez',
+    fonte: 'Avaliação no Google',
+  },
+];
+---
+
+<section id="sobre" class="bg-paper">
+  <div class="mx-auto max-w-7xl px-5 pb-20 pt-12 md:px-8 md:pb-28 md:pt-16">
+    <!-- Credibilidade: equipe real + texto -->
+    <div class="reveal-children grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+
+      <div class="order-1 text-center md:text-left lg:order-2">
+        <p class="eyebrow mb-4">Quem realiza</p>
+        <h2 class="text-4xl leading-tight text-ink md:text-5xl">
+          Uma realização Santafé Imobiliária e Incorporadora.
+        </h2>
+
+        <!-- Logo só no mobile, entre título e parágrafo -->
+        <div class="my-6 flex flex-col items-center md:hidden">
+          <Image
+            src={logoSantafe}
+            alt="Santafé Imobiliária e Incorporadora"
+            width={320}
+            height={96}
+            loading="lazy"
+            style="width:min(200px,60%);height:auto;display:block;"
+          />
+        </div>
+
+        <p class="mt-5 text-[0.95rem] leading-[1.75] text-ink-soft md:mt-5">
+          Mais de uma década no centro de Xanxerê ajudando famílias a encontrar o lugar certo para morar e
+          investir. Gente de verdade, com história e a maior carteira de imóveis da cidade.
+        </p>
+
+        <div class="mt-10 flex w-fit mx-auto items-center gap-0 md:mx-0">
+          {provas.map((p, i) => (
+            <div class:list={['flex flex-col', i > 0 && 'border-l border-gold/35 pl-8 ml-8']}>
+              <span class="font-display text-3xl font-bold text-forest whitespace-nowrap">{p.numero}</span>
+              <span class="mt-1 text-xs uppercase tracking-[0.14em] text-ink-mute">{p.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Logo no desktop: coluna esquerda -->
+      <div class="order-2 hidden flex-col items-center justify-center md:flex lg:order-1">
+        <Image
+          src={logoSantafe}
+          alt="Santafé Imobiliária e Incorporadora"
+          width={320}
+          height={96}
+          loading="lazy"
+          style="width:min(220px,65%);height:auto;display:block;"
+        />
+        <p style="margin-top:14px;font-family:var(--font-sans);font-size:0.72rem;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:rgba(21,49,42,0.4);text-align:center;">
+          Xanxerê · SC · Desde 2011
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Faixa do escritório -->
+    <div class="mt-20">
+      <div class="mx-auto max-w-2xl text-center md:mx-0 md:text-left">
+        <h3 class="text-4xl leading-tight text-ink md:text-5xl">
+          Um escritório de verdade para te receber.
+        </h3>
+        <p class="mt-3 text-[0.95rem] leading-[1.75] text-ink-soft">
+          No centro de Xanxerê, na Av. Brasil, 370.<br />Venha tomar um café e conhecer o Jardim Colina de perto.
+        </p>
+      </div>
+      <div class="mt-8 overflow-hidden rounded-[24px]">
+        <Image
+          src={escritorio}
+          alt="Interior do escritório da Santafé em Xanxerê, com lounge e salas de atendimento"
+          widths={[900, 1400, 1920]}
+          sizes="100vw"
+          format="webp"
+          quality={74}
+          loading="lazy"
+          class="aspect-[16/8] w-full object-cover"
+        />
+      </div>
+    </div>
+
+    <!-- Depoimentos reais do Google -->
+    <div class="mt-20">
+      <div class="reveal mb-8 text-center sm:text-left">
+        <p class="eyebrow mb-2">Reputação</p>
+        <h3 class="text-2xl text-ink sm:text-3xl">Quem já é cliente, recomenda.</h3>
+      </div>
+
+      <div class="reveal-children grid gap-6 md:grid-cols-3">
+        {
+          depoimentos.map((d) => (
+            <div class="flex flex-col rounded-[24px] border border-ink/5 bg-paper-2 p-7 shadow-sm">
+              <div class="flex items-center gap-3">
+                <span class="flex h-11 w-11 flex-none items-center justify-center rounded-full bg-forest font-display text-base text-gold-soft">
+                  {d.nome.charAt(0)}
+                </span>
+                <div class="min-w-0">
+                  <span class="block truncate font-semibold text-ink">{d.nome}</span>
+                  <span class="flex gap-0.5 text-gold" aria-hidden="true">
+                    {Array.from({ length: 5 }).map(() => (
+                      <Icon name="tabler:star-filled" class="h-3.5 w-3.5" />
+                    ))}
+                  </span>
+                </div>
+                <svg class="ml-auto h-5 w-5 flex-none shrink-0" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+              </div>
+              <blockquote class="mt-4 flex-1 text-ink-soft">{d.texto}</blockquote>
+              <span class="mt-4 block text-xs text-ink-mute">{d.fonte}</span>
+            </div>
+          ))
+        }
+      </div>
+
+    </div>
+  </div>
+</section>

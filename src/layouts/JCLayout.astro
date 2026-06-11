@@ -1,0 +1,196 @@
+---
+import '~/assets/styles/tailwind.css';
+import WhatsAppFloat from '~/components/jc/WhatsAppFloat.astro';
+
+export interface Props {
+  title?: string;
+  description?: string;
+  noindex?: boolean;
+}
+
+const {
+  title = 'Loteamento Jardim Colina · Lotes a partir de 360m² em Xanxerê SC | Santafé',
+  description = 'Loteamento Jardim Colina em Xanxerê SC: 146 lotes planejados a partir de 360 m², infraestrutura completa e financiamento direto com a incorporadora em até 72x. Uma realização Santafé Imobiliária.',
+  noindex = false,
+} = Astro.props;
+
+const base = 'https://jardimcolina.santafe.imb.br';
+const canonical = new URL(Astro.url.pathname, Astro.site ?? base).toString();
+const ogImage = new URL('/og-jardimcolina.jpg', Astro.site ?? base).toString();
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': ['LocalBusiness', 'RealEstateAgent'],
+    '@id': `${base}/#org`,
+    name: 'Santafé Imobiliária e Incorporadora',
+    image: ogImage,
+    url: base,
+    telephone: '+554934338768',
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: 'Av. Brasil, 370 - Centro',
+      addressLocality: 'Xanxerê',
+      addressRegion: 'SC',
+      postalCode: '89820-000',
+      addressCountry: 'BR',
+    },
+    identifier: 'CRECI J3799',
+    areaServed: 'Xanxerê, SC',
+    priceRange: '$$',
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '4.1',
+      reviewCount: '84',
+      bestRating: '5',
+      worstRating: '1',
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Place',
+    '@id': `${base}/#loteamento`,
+    name: 'Loteamento Jardim Colina',
+    description:
+      'Loteamento residencial planejado em Xanxerê SC com 146 lotes a partir de 360 m², infraestrutura completa, áreas de lazer e financiamento direto em até 72x.',
+    image: ogImage,
+    url: base,
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: 'Jardim Colina',
+      addressLocality: 'Xanxerê',
+      addressRegion: 'SC',
+      postalCode: '89820-000',
+      addressCountry: 'BR',
+    },
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: -26.87187,
+      longitude: -52.37572,
+    },
+    containedInPlace: {
+      '@type': 'City',
+      name: 'Xanxerê',
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Loteamentos em Xanxerê SC',
+        item: base,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Jardim Colina',
+        item: base,
+      },
+    ],
+  },
+];
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicons/icon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicons/icon-16.png" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
+    <meta name="theme-color" content="#15312A" />
+    <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
+
+    <!-- Geo local -->
+    <meta name="geo.region" content="BR-SC" />
+    <meta name="geo.placename" content="Xanxerê, Santa Catarina" />
+    <meta name="geo.position" content="-26.87187;-52.37572" />
+    <meta name="ICBM" content="-26.87187, -52.37572" />
+
+    <!-- LCP preload -->
+    <link rel="preload" as="image" href="/video/hero-poster.jpg" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="Loteamento Jardim Colina" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@800&display=swap"
+      rel="stylesheet"
+    />
+
+    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Pular para o conteúdo</a>
+    <slot />
+    <WhatsAppFloat />
+
+    <script is:inline>
+      (() => {
+        const header = document.getElementById('jc-header');
+        if (!header) return;
+        const onScroll = () => {
+          header.classList.toggle('scrolled', window.scrollY > 40);
+        };
+        onScroll();
+        window.addEventListener('scroll', onScroll, { passive: true });
+      })();
+    </script>
+
+    <!-- Reveal on scroll -->
+    <script is:inline>
+      (() => {
+        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const targets = document.querySelectorAll('.reveal, .reveal-children');
+        if (reduce || !('IntersectionObserver' in window)) {
+          targets.forEach((el) => el.classList.add('is-in'));
+          return;
+        }
+        // indexa filhos pra stagger
+        document.querySelectorAll('.reveal-children').forEach((el) => {
+          Array.from(el.children).forEach((c, i) => c.style.setProperty('--i', i));
+        });
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((e) => {
+              if (e.isIntersecting) {
+                e.target.classList.add('is-in');
+                io.unobserve(e.target);
+              }
+            });
+          },
+          { threshold: 0.12, rootMargin: '0px 0px -8% 0px' }
+        );
+        targets.forEach((el) => io.observe(el));
+      })();
+    </script>
+  </body>
+</html>

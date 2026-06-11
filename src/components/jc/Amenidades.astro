@@ -1,0 +1,99 @@
+---
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import pracaDia from '~/assets/jardimcolina/amen-praca-dia.png';
+import pracaNoite from '~/assets/jardimcolina/amen-praca-noite.png';
+import playground from '~/assets/jardimcolina/amen-playground.png';
+import quadra from '~/assets/jardimcolina/amen-quadra.png';
+import pet from '~/assets/jardimcolina/amen-pet.png';
+import jardim from '~/assets/jardimcolina/amen-jardim.png';
+import entrada from '~/assets/jardimcolina/amen-entrada.png';
+
+const cards = [
+  { img: pracaDia,    nome: 'Praça de convivência',       alt: 'Render da praça de convivência do Jardim Colina durante o dia' },
+  { img: pracaNoite,  nome: 'Praça à noite',              alt: 'Render da praça de convivência do Jardim Colina iluminada à noite' },
+  { img: playground,  nome: 'Playground',                 alt: 'Render do playground do Jardim Colina' },
+  { img: quadra,      nome: 'Quadra de esportes',         alt: 'Render da quadra de esportes do Jardim Colina com pessoas' },
+  { img: jardim,      nome: 'Bosque e pista de caminhada',alt: 'Render do bosque e da pista de caminhada do Jardim Colina' },
+  { img: pet,         nome: 'Espaço pet',                 alt: 'Render do espaço pet do Jardim Colina' },
+  { img: entrada,     nome: 'Entrada e área de lazer',    alt: 'Render da entrada e área de lazer do Jardim Colina' },
+];
+---
+
+<section id="amenidades" class="overflow-hidden bg-paper">
+  <div class="mx-auto max-w-7xl px-5 pb-20 pt-12 md:px-8 md:pb-28 md:pt-16">
+
+    <!-- Cabeçalho centralizado -->
+    <div class="reveal flex flex-col items-center text-center">
+      <div class="mx-auto max-w-2xl">
+        <p class="eyebrow mb-4">Lazer</p>
+        <h2 class="text-2xl leading-tight text-ink sm:text-3xl md:text-4xl">
+          Espaços pensados para viver bem todos os dias.
+        </h2>
+        <p class="mx-auto mt-5 max-w-xl text-[0.95rem] leading-[1.75] text-ink-soft">
+          Praça, playground, quadra, bosque, pista de caminhada e espaço pet. Lugares para a família
+          encontrar, brincar e relaxar a poucos passos de casa.
+        </p>
+      </div>
+    </div>
+
+    <!-- Carrossel com botões laterais -->
+    <div class="mt-12 flex items-center gap-3 md:gap-5">
+
+      <button id="amen-prev" type="button" class="amen-btn hidden shrink-0 md:flex" aria-label="Ver anterior">
+        <Icon name="tabler:arrow-left" class="h-5 w-5" />
+      </button>
+
+      <div id="amen-track" class="reveal amen-track min-w-0 flex-1 flex snap-x snap-mandatory gap-6 overflow-x-auto scroll-smooth">
+        {
+          cards.map((c) => (
+            <figure class="amen-card snap-start w-[80%] shrink-0 sm:w-[55%] lg:w-[38%]">
+              <div class="relative overflow-hidden rounded-[24px]">
+                <Image
+                  src={c.img}
+                  alt={c.alt}
+                  widths={[600, 900]}
+                  sizes="(max-width: 640px) 80vw, 38vw"
+                  format="webp"
+                  quality={76}
+                  loading="lazy"
+                  class="aspect-[4/3] w-full scale-[1.03] object-cover transition-transform duration-700 hover:scale-[1.07]"
+                />
+                <!-- Gradiente para legenda -->
+                <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(6,16,11,0.72) 0%,rgba(6,16,11,0.18) 38%,transparent 62%);pointer-events:none;border-radius:inherit;"></div>
+                <!-- Legenda dentro da imagem -->
+                <figcaption style="position:absolute;bottom:0;left:0;right:0;padding:18px 22px 20px;color:#fff;font-family:var(--font-sans);font-size:0.92rem;font-weight:600;letter-spacing:0.03em;line-height:1.3;">
+                  {c.nome}
+                </figcaption>
+              </div>
+            </figure>
+          ))
+        }
+      </div>
+
+      <button id="amen-next" type="button" class="amen-btn hidden shrink-0 md:flex" aria-label="Ver próximo">
+        <Icon name="tabler:arrow-right" class="h-5 w-5" />
+      </button>
+
+    </div>
+
+  </div>
+</section>
+
+<script is:inline>
+  (() => {
+    const track = document.getElementById('amen-track');
+    const prev  = document.getElementById('amen-prev');
+    const next  = document.getElementById('amen-next');
+    if (!track) return;
+
+    const cardWidth = () => {
+      const card = track.querySelector('.amen-card');
+      return card ? card.getBoundingClientRect().width + 24 : track.clientWidth * 0.8;
+    };
+
+    prev?.addEventListener('click', () => track.scrollBy({ left: -cardWidth(), behavior: 'smooth' }));
+    next?.addEventListener('click', () => track.scrollBy({ left:  cardWidth(), behavior: 'smooth' }));
+
+  })();
+</script>

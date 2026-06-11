@@ -1,0 +1,154 @@
+---
+const fases = [
+  {
+    num: '01',
+    tempo: 'Hoje · Jun 2026',
+    titulo: 'Lançamento',
+    desc: 'Reservas abertas para o Jardim Colina. Lotes disponíveis para escolha com condições especiais de pagamento.',
+    ativo: true,
+  },
+  {
+    num: '02',
+    tempo: '2º semestre 2026',
+    titulo: 'Início das obras',
+    desc: 'Terraplenagem e abertura de vias. Implantação da infraestrutura de base do loteamento.',
+    ativo: false,
+  },
+  {
+    num: '03',
+    tempo: '2026 / 2027',
+    titulo: 'Infraestrutura',
+    desc: 'Rede elétrica, água e esgoto, além da pavimentação asfáltica de todas as vias internas.',
+    ativo: false,
+  },
+  {
+    num: '04',
+    tempo: 'Entrega prevista 2027',
+    titulo: 'Lotes prontos',
+    desc: 'Infraestrutura completa. Lotes regularizados e prontos para construção.',
+    ativo: false,
+  },
+];
+---
+
+<section id="cronograma" class="bg-forest overflow-x-clip" style="background:radial-gradient(ellipse 100% 60% at 50% 0%, #2a6050 0%, #15312a 70%);">
+  <div class="mx-auto max-w-7xl px-5 pb-20 pt-12 md:px-10 md:pb-28 md:pt-16">
+
+    <!-- Cabeçalho editorial -->
+    <div class="reveal mb-16 mx-auto max-w-2xl text-center md:mb-20">
+      <p class="eyebrow mb-6">Cronograma</p>
+      <h2 class="font-display text-4xl font-extrabold leading-[1.05] text-white md:text-5xl lg:text-[3.4rem]">
+        De lançamento
+        <em class="gold-grad" style="font-style:italic;font-family:'Playfair Display',Georgia,serif;font-weight:700;"> à entrega</em>
+      </h2>
+      <p class="mt-5 text-[0.95rem] leading-[1.75] text-white/52 max-w-lg mx-auto">
+        Cada fase planejada e documentada. Acompanhe a evolução do Jardim Colina do lançamento ao lote pronto para construir.
+      </p>
+    </div>
+
+    <!-- Linha do tempo + cards -->
+    <div class="reveal-children">
+
+      <!-- Trilha da linha do tempo (desktop) -->
+      <div class="relative mb-8 hidden lg:block">
+        <!-- Linha base -->
+        <div style="position:absolute;top:50%;left:0;right:0;height:1px;background:rgba(255,255,255,0.1);transform:translateY(-50%);"></div>
+        <!-- Progresso: do início ao nó 1 -->
+        <div style="position:absolute;top:50%;left:0;width:12.5%;height:1px;background:linear-gradient(90deg,#c2a15b,rgba(194,161,91,0.3));transform:translateY(-50%);"></div>
+
+        <div class="grid grid-cols-4 relative">
+          {fases.map((fase, i) => (
+            <div class="crono-node flex flex-col items-center gap-3">
+              <!-- Nó -->
+              <div class={`crono-dot ${fase.ativo ? 'crono-dot-active' : 'crono-dot-inactive'}`} style={
+                fase.ativo
+                  ? 'width:14px;height:14px;border-radius:50%;background:linear-gradient(135deg,#ecdfa8,#c2a15b);box-shadow:0 0 0 4px rgba(194,161,91,0.2);flex-shrink:0;'
+                  : 'width:10px;height:10px;border-radius:50%;border:1px solid rgba(255,255,255,0.2);background:transparent;flex-shrink:0;margin-top:2px;'
+              }></div>
+              <!-- Label da fase -->
+              <span class="crono-label" style={`font-size:10px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;transition:color 0.2s;${fase.ativo ? 'color:rgba(194,161,91,0.85);' : 'color:rgba(255,255,255,0.3);'}`}>
+                Fase {fase.num}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Cards das fases -->
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
+        {fases.map((fase) => (
+          <div
+            class="crono-card"
+            style={
+              fase.ativo
+                ? 'background:rgba(255,255,255,0.06);border:1px solid rgba(194,161,91,0.3);border-radius:16px;padding:24px 22px 28px;position:relative;overflow:hidden;'
+                : 'background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:24px 22px 28px;'
+            }
+          >
+
+            <!-- Tempo -->
+            <div class="crono-tempo" style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+              {fase.ativo && (
+                <span style="width:6px;height:6px;border-radius:50%;background:#c2a15b;flex-shrink:0;animation:pulse 2s infinite;"></span>
+              )}
+              <span style={`font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;${fase.ativo ? 'color:#c2a15b;' : 'color:rgba(255,255,255,0.3);'}`}>
+                {fase.tempo}
+              </span>
+            </div>
+
+            <!-- Título -->
+            <h3 style={`font-family:var(--font-display);font-size:1.2rem;font-weight:800;line-height:1.25;margin-bottom:12px;${fase.ativo ? 'color:#fff;' : 'color:rgba(255,255,255,0.65);'}`}>
+              {fase.titulo}
+            </h3>
+
+            <!-- Descrição -->
+            <p style={`font-size:0.84rem;line-height:1.65;${fase.ativo ? 'color:rgba(255,255,255,0.6);' : 'color:rgba(255,255,255,0.3);'}`}>
+              {fase.desc}
+            </p>
+
+          </div>
+        ))}
+      </div>
+
+    </div>
+
+    <!-- Disclaimer -->
+    <p class="reveal mt-8 text-center text-[10px] uppercase tracking-[0.16em] text-white/25">
+      Cronograma de referência. Datas e fases sujeitas a ajuste conforme aprovações.
+    </p>
+
+  </div>
+</section>
+
+<style>
+@media (max-width: 639px) {
+  .crono-card { text-align: center; }
+  .crono-tempo { justify-content: center; }
+}
+.crono-card {
+  transition: transform 0.28s cubic-bezier(.2,.7,.3,1), box-shadow 0.28s ease;
+  will-change: transform;
+}
+.crono-card:hover {
+  transform: translateY(-5px);
+}
+
+.crono-dot {
+  transition: transform 0.22s cubic-bezier(.2,.8,.3,1), box-shadow 0.22s ease;
+}
+.crono-node:hover .crono-dot-active {
+  transform: scale(1.5);
+  box-shadow: 0 0 0 6px rgba(194,161,91,0.22), 0 0 0 12px rgba(194,161,91,0.07) !important;
+}
+.crono-node:hover .crono-dot-inactive {
+  transform: scale(1.5);
+  border-color: rgba(255,255,255,0.5) !important;
+}
+.crono-node:hover .crono-label {
+  color: rgba(255,255,255,0.65) !important;
+}
+.crono-node:hover .crono-dot-active + .crono-label,
+.crono-node:hover .crono-label {
+  color: rgba(194,161,91,0.9) !important;
+}
+</style>

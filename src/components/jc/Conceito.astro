@@ -1,0 +1,195 @@
+---
+import { Image } from 'astro:assets';
+import moradorImg from '~/assets/jardimcolina/conceito-moradia.png';
+import investidorImg from '~/assets/jardimcolina/conceito-invest.png';
+---
+
+<section id="conceito" class="bg-paper-2">
+  <div class="mx-auto max-w-7xl px-5 pb-16 pt-12 md:px-8 md:pb-24 md:pt-16">
+
+    <!-- Cabeçalho -->
+    <div class="reveal mx-auto mb-12 max-w-3xl text-center md:mb-16">
+      <p class="eyebrow mb-5">O empreendimento</p>
+      <h2 class="font-display text-3xl font-extrabold leading-[1.12] text-ink sm:text-4xl md:text-[2.7rem]">
+        O lugar certo para quem vai
+        <em class="gold-grad" style="font-style:italic;font-family:'Playfair Display',Georgia,serif;font-weight:700;">morar</em>
+        e para quem vai
+        <em class="gold-grad" style="font-style:italic;font-family:'Playfair Display',Georgia,serif;font-weight:700;">investir</em>.
+      </h2>
+    </div>
+
+    <!-- Cards -->
+    <div class="reveal-children grid gap-6 sm:grid-cols-2 lg:gap-8">
+
+      <!-- ── Card Morar (detalhes verdes) ── -->
+      <div class="conceito-card-green overflow-hidden rounded-[24px] bg-white shadow-sm">
+        <Image
+          src={moradorImg}
+          alt="Casa moderna do Loteamento Jardim Colina"
+          widths={[640, 900]}
+          sizes="(max-width:640px) 100vw, 50vw"
+          format="webp"
+          quality={82}
+          loading="lazy"
+          class="aspect-[16/10] w-full object-cover transition-transform duration-700 hover:scale-[1.03]"
+        />
+        <div class="p-7 text-center md:p-8 md:text-left">
+          <p class="conceito-label-green mb-3">Para morar</p>
+          <h3 class="conceito-title-green mb-5 font-display text-2xl font-extrabold leading-tight md:text-3xl">
+            360m² para chamar de seu.
+          </h3>
+          <ul class="mb-5 mx-auto flex w-fit flex-col items-start gap-2.5 md:mx-0">
+            {[
+              'Quintal, garagem e espaço próprio',
+              'Escola e comércio a 10 minutos',
+              'Lazer e segurança para a família',
+            ].map(item => (
+              <li class="flex items-center gap-3 text-sm leading-relaxed text-ink-soft text-left">
+                <svg class="shrink-0" width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+                  <path d="M2 6.5l3 3 6-6" stroke="#2a6050" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                {item}
+              </li>
+            ))}
+          </ul>
+          <div class="flex justify-center gap-1.5 md:justify-start md:gap-2">
+            {['Família','Lazer','Segurança'].map(t => (
+              <span class="conceito-tag-green">{t}</span>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Card Investir (detalhes dourados) ── -->
+      <div class="conceito-card-gold overflow-hidden rounded-[24px] shadow-sm" style="background:radial-gradient(ellipse 90% 80% at 35% 25%, #2a6050 0%, #15312a 100%);">
+        <Image
+          src={investidorImg}
+          alt="Casas modernas do Loteamento Jardim Colina"
+          widths={[640, 900]}
+          sizes="(max-width:640px) 100vw, 50vw"
+          format="webp"
+          quality={82}
+          loading="lazy"
+          class="aspect-[16/10] w-full object-cover transition-transform duration-700 hover:scale-[1.03]"
+        />
+        <div class="p-7 text-center md:p-8 md:text-left">
+          <p class="conceito-label-gold mb-3">Para investir</p>
+          <h3 class="conceito-title-gold mb-5 font-display text-2xl font-extrabold leading-tight md:text-3xl">
+            Compra na planta. Valorização real.
+          </h3>
+          <ul class="mb-5 mx-auto flex w-fit flex-col items-start gap-2.5 md:mx-0">
+            {[
+              'Até 72x direto, sem banco',
+              'Região consolidada em Xanxerê',
+              'Valorização ao longo da obra',
+            ].map(item => (
+              <li class="flex items-center gap-3 text-left text-sm leading-relaxed" style="color:rgba(255,255,255,0.68)">
+                <svg class="shrink-0" width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+                  <path d="M2 6.5l3 3 6-6" stroke="#c2a15b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                {item}
+              </li>
+            ))}
+          </ul>
+          <div class="flex justify-center gap-1.5 md:justify-start md:gap-2">
+            {['Até 72x','Sem banco','Lançamento'].map(t => (
+              <span class="conceito-tag-gold">{t}</span>
+            ))}
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+/* ── Card verde ── */
+.conceito-card-green {
+  border: 1.5px solid transparent;
+  background-clip: padding-box;
+  box-shadow: 0 0 0 1.5px rgba(21,49,42,0.12), 0 4px 24px rgba(21,49,42,0.06);
+}
+.conceito-label-green {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, #1e4a3e 0%, #2a6050 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: inline-block;
+}
+.conceito-title-green {
+  background: linear-gradient(135deg, #15312a 0%, #2a6050 60%, #15312a 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: block;
+}
+.conceito-dot-green {
+  background: linear-gradient(135deg, #15312a, #2a6050);
+}
+.conceito-tag-green {
+  background: linear-gradient(135deg, #1e4a3e 0%, #2a6050 100%);
+  border: none;
+  border-radius: 100px;
+  padding: 7px 16px;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.92);
+  display: inline-block;
+  box-shadow: 0 2px 10px rgba(21,49,42,0.22);
+  white-space: nowrap;
+}
+@media (max-width: 639px) {
+  .conceito-tag-green, .conceito-tag-gold {
+    padding: 4px 10px !important;
+    font-size: 8px !important;
+    letter-spacing: 0.12em !important;
+  }
+}
+
+/* ── Card dourado ── */
+.conceito-card-gold {
+  box-shadow: 0 0 0 1.5px rgba(194,161,91,0.25), 0 4px 28px rgba(0,0,0,0.18);
+}
+.conceito-label-gold {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, #ecdfa8 0%, #c2a15b 50%, #d8be86 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: inline-block;
+}
+.conceito-title-gold {
+  background: linear-gradient(135deg, #ecdfa8 0%, #c2a15b 44%, #d8be86 78%, #b08840 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: block;
+}
+.conceito-dot-gold {
+  background: linear-gradient(135deg, #ecdfa8, #c2a15b);
+}
+.conceito-tag-gold {
+  background: linear-gradient(135deg, #ecdfa8 0%, #c2a15b 55%, #b08840 100%);
+  border: none;
+  border-radius: 100px;
+  padding: 7px 16px;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #15312a;
+  display: inline-block;
+  box-shadow: 0 2px 12px rgba(194,161,91,0.35);
+  white-space: nowrap;
+}
+</style>

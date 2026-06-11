@@ -1,0 +1,12 @@
+{
+  "name": "Loteamento Jardim Colina",
+  "short_name": "Jardim Colina",
+  "description": "Loteamento Jardim Colina em Xanxerê-SC — 146 lotes a partir de 360m².",
+  "icons": [
+    { "src": "/favicons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/favicons/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ],
+  "theme_color": "#15312A",
+  "background_color": "#F5EFE3",
+  "display": "standalone"
+}
