@@ -60,7 +60,7 @@ const pins = LOTES.filter(l => l.preco > 0).map(l => ({
             'absolute w-2.5 h-2.5 rounded-full -translate-x-1/2 -translate-y-1/2 ring-1 ring-white/40',
             p.situacao === 'disponivel' ? 'bg-green-500' :
             p.situacao === 'reservado'  ? 'bg-yellow-400' :
-                                          'bg-red-600'
+                                          'bg-gray-700'
           ].join(' ')}
           style={`left:${p.left}%;top:${p.top}%`}
         />
@@ -90,7 +90,7 @@ const pins = LOTES.filter(l => l.preco > 0).map(l => ({
         <span class="w-3 h-3 rounded-full bg-yellow-400 inline-block"></span> Reservado
       </div>
       <div class="flex items-center gap-2 text-white/70">
-        <span class="w-3 h-3 rounded-full bg-red-600 inline-block"></span> Indisponível
+        <span class="w-3 h-3 rounded-full bg-gray-700 inline-block"></span> Indisponível
       </div>
     </div>
 
