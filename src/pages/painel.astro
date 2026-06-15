@@ -65,6 +65,11 @@ const SUPABASE_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
     }
     header h1 { font-size: 16px; font-weight: 700; flex: 1; }
     header span { font-size: 12px; color: rgba(255,255,255,.55); }
+    .role-badge {
+      font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px;
+      background: rgba(255,255,255,.15); color: rgba(255,255,255,.9);
+    }
+    .role-badge.gestor { background: var(--gold); color: var(--forest); }
     #btn-logout {
       background: none; border: 1px solid rgba(255,255,255,.3); color: rgba(255,255,255,.8);
       border-radius: 20px; padding: 5px 14px; font-size: 12px; cursor: pointer; font-family: inherit;
@@ -164,8 +169,9 @@ const SUPABASE_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
 <!-- Dashboard -->
 <div id="dashboard">
   <header>
-    <h1>Admin · Lotes em Tempo Real</h1>
+    <h1>Painel · Lotes em Tempo Real</h1>
     <span id="user-email"></span>
+    <span id="role-badge" class="role-badge" style="display:none"></span>
     <button id="btn-logout">Sair</button>
   </header>
 
@@ -248,18 +254,19 @@ const SUPABASE_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
     loginError.style.display = 'none';
 
     if (hasSupabase && supabaseClient) {
-      const { error } = await supabaseClient.auth.signInWithPassword({ email, password: senha });
+      const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password: senha });
       if (error) {
         loginError.textContent = 'Email ou senha incorretos.';
         loginError.style.display = 'block';
         btnLogin.disabled = false;
         return;
       }
-      mostrarDashboard(email);
+      const role = data.user?.user_metadata?.role ?? 'funcionario';
+      mostrarDashboard(email, role);
     } else {
       // Modo demo local (sem Supabase)
       if (email === DEMO_EMAIL && senha === DEMO_PASSWORD) {
-        mostrarDashboard(email);
+        mostrarDashboard(email, 'gestor');
       } else {
         loginError.textContent = 'Credenciais inválidas. (Modo demo: use o email e senha fornecidos pela equipe)';
         loginError.style.display = 'block';
@@ -276,10 +283,19 @@ const SUPABASE_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
     senhaInput.value = '';
   });
 
-  async function mostrarDashboard(email) {
+  async function mostrarDashboard(email, role = 'funcionario') {
     loginScreen.style.display = 'none';
     dashboard.style.display   = 'block';
     document.getElementById('user-email').textContent = email;
+
+    const badge = document.getElementById('role-badge');
+    badge.style.display = 'inline-block';
+    if (role === 'gestor') {
+      badge.textContent = 'Gestor';
+      badge.classList.add('gestor');
+    } else {
+      badge.textContent = 'Funcionário';
+    }
 
     if (!hasSupabase) {
       document.getElementById('config-warning').style.display = 'block';
@@ -398,7 +414,10 @@ const SUPABASE_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
   // ── SESSÃO PERSISTENTE ────────────────────────────────────────────────────────
   if (hasSupabase && supabaseClient) {
     supabaseClient.auth.getSession().then(({ data: { session } }) => {
-      if (session) mostrarDashboard(session.user.email);
+      if (session) {
+        const role = session.user?.user_metadata?.role ?? 'funcionario';
+        mostrarDashboard(session.user.email, role);
+      }
     });
   }
 </script>
