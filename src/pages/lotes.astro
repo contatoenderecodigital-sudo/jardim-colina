@@ -75,7 +75,7 @@ const lotesJson = LOTES.map(l => ({
     .leg { display: flex; align-items: center; gap: 4px; font-size: 11px; color: rgba(255,255,255,.7); white-space: nowrap; }
     .leg-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
     .leg-g { background: #16a34a; }
-    .leg-o { background: #ea580c; }
+    .leg-o { background: #eab308; }
     .leg-d { background: #dc2626; }
 
     #counts {
@@ -86,7 +86,7 @@ const lotesJson = LOTES.map(l => ({
       color: #fff; white-space: nowrap;
     }
     .cc-g { background: rgba(22,163,74,.25); border: 1px solid rgba(22,163,74,.6); }
-    .cc-o { background: rgba(234,88,12,.25); border: 1px solid rgba(234,88,12,.6); }
+    .cc-o { background: rgba(234,179,8,.25); border: 1px solid rgba(234,179,8,.6); }
     .cc-d { background: rgba(220,38,38,.25); border: 1px solid rgba(220,38,38,.6); }
 
     /* mobile: esconde título e legenda, mantém só os chips */
@@ -130,7 +130,7 @@ const lotesJson = LOTES.map(l => ({
       box-shadow: 0 4px 16px rgba(0,0,0,.6), 0 0 0 2px rgba(255,255,255,.9);
     }
     .lote-marker.disp  { background: #16a34a; }
-    .lote-marker.res   { background: #ea580c; }
+    .lote-marker.res   { background: #ca8a04; }
     .lote-marker.vend  { background: #dc2626; }
     .lote-marker.bloq  { display: none; }
 
@@ -185,7 +185,7 @@ const lotesJson = LOTES.map(l => ({
       margin-bottom: 8px;
     }
     .sp-disp { background: #dcfce7; color: #16a34a; }
-    .sp-res  { background: #ffedd5; color: #ea580c; }
+    .sp-res  { background: #fef9c3; color: #854d0e; }
     .sp-vend { background: #fee2e2; color: #dc2626; }
 
     #panel-price { font-size: 30px; font-weight: 900; color: var(--forest); line-height: 1; }
@@ -270,7 +270,7 @@ const lotesJson = LOTES.map(l => ({
   <div id="counts">
     <span class="count-chip cc-g" id="cnt-disp">{disp} disponíveis</span>
     <span class="count-chip cc-o" id="cnt-res">{reserv} reservados</span>
-    <span class="count-chip cc-d" id="cnt-vend">{vend} vendidos</span>
+    <span class="count-chip cc-d" id="cnt-vend">{vend} indisponíveis</span>
   </div>
   <div id="legend">
     <div class="leg"><div class="leg-dot leg-g"></div>disponível</div>
@@ -364,16 +364,18 @@ const lotesJson = LOTES.map(l => ({
 
   L.imageOverlay('/colina10.webp', bounds, { opacity: 1, interactive: false }).addTo(map);
 
-  // Trava o pan dentro da imagem
-  map.setMaxBounds(bounds);
+  // Seta o view inicial — obrigatório para CRS.Simple renderizar
+  map.fitBounds(bounds, { padding: [0, 0] });
 
-  // Ajusta zoom pra imagem preencher a tela — usa whenReady pra garantir que o container tem tamanho real
-  map.whenReady(function() {
-    map.fitBounds(bounds, { padding: [0, 0] });
-    const minZ = map.getZoom();
-    map.setMinZoom(minZ);
-    map.setMaxZoom(minZ + 3);
-  });
+  // Após render, tranca o zoom pra imagem sempre preencher a tela
+  setTimeout(function() {
+    var minZ = map.getZoom();
+    if (minZ !== undefined && !isNaN(minZ)) {
+      map.setMinZoom(minZ);
+      map.setMaxZoom(minZ + 3);
+      map.setMaxBounds(bounds);
+    }
+  }, 200);
 
   // ── PINS ──
   const markers = {};
