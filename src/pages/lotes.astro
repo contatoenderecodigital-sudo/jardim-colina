@@ -41,7 +41,7 @@ const lotesJson = LOTES.map(l => ({
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet" />
 
-  <style>
+  <style is:global>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
@@ -114,7 +114,7 @@ const lotesJson = LOTES.map(l => ({
     .lote-marker {
       display: flex; align-items: center; justify-content: center;
       width: 36px; height: 36px; border-radius: 50%;
-      font-size: 9px; font-weight: 900; color: #fff;
+      font-size: 8px; font-weight: 900; color: #fff;
       border: 2.5px solid rgba(255,255,255,.85);
       cursor: pointer;
       transition: transform .15s, box-shadow .15s;
@@ -367,15 +367,15 @@ const lotesJson = LOTES.map(l => ({
   // Seta o view inicial — obrigatório para CRS.Simple renderizar
   map.fitBounds(bounds, { padding: [0, 0] });
 
-  // Após render, tranca o zoom pra imagem sempre preencher a tela
-  setTimeout(function() {
+  // Após fitBounds completar, trava o zoom para a imagem sempre preencher a tela
+  map.once('moveend', function() {
     var minZ = map.getZoom();
     if (minZ !== undefined && !isNaN(minZ)) {
       map.setMinZoom(minZ);
-      map.setMaxZoom(minZ + 3);
+      map.setMaxZoom(minZ + 4);
       map.setMaxBounds(bounds);
     }
-  }, 200);
+  });
 
   // ── PINS ──
   const markers = {};
@@ -393,11 +393,10 @@ const lotesJson = LOTES.map(l => ({
       if (l.situacao === 'bloqueado' && l.preco === 0) return; // área comum
 
       const cls = statusClass(l.situacao);
-      const num = l.id.split('-')[1];
 
       const icon = L.divIcon({
         className: '',
-        html: `<div class="lote-marker ${cls}" title="${l.id}">${num}</div>`,
+        html: `<div class="lote-marker ${cls}" title="${l.id}">${l.id}</div>`,
         iconSize: [36, 36],
         iconAnchor: [18, 18],
       });
