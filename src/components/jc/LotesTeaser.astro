@@ -1,93 +1,102 @@
 ---
-import { lotesDisponiveis, lotesVendaveis, LOTES } from '~/data/lotes-data';
-import { waHref } from './data';
+import { LOTES } from '~/data/lotes-data';
 
-const disp  = lotesDisponiveis();
-const total = lotesVendaveis();
+const disp  = LOTES.filter(l => l.situacao === 'disponivel').length;
+const total = LOTES.filter(l => l.preco > 0).length;
 const pct   = Math.round(((total - disp) / total) * 100);
 
-// preview: primeiros 20 lotes vendáveis pra mostrar no grid teaser
-const preview = LOTES.filter(l => l.preco > 0).slice(0, 20);
+const pins = LOTES.filter(l => l.preco > 0).map(l => ({
+  id: l.id,
+  situacao: l.situacao,
+  left: (l.pinX / 500 * 100).toFixed(2),
+  top:  ((500 - l.pinY) / 500 * 100).toFixed(2),
+}));
 ---
 
 <section id="lotes" class="bg-forest py-20 md:py-28 overflow-hidden">
   <div class="mx-auto max-w-7xl px-5 md:px-8">
 
     <!-- Header -->
-    <div class="reveal flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
+    <div class="reveal flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10">
       <div>
         <p class="eyebrow mb-3 text-gold-soft">Disponibilidade em tempo real</p>
         <h2 class="font-display text-4xl md:text-5xl text-white leading-tight">
           Seu lote está<br />esperando por você.
         </h2>
       </div>
-      <div class="flex flex-col gap-2 text-right">
-        <p class="text-3xl font-extrabold text-gold">{disp}</p>
-        <p class="text-sm text-white/60">lotes disponíveis de {total}</p>
+      <div class="text-right">
+        <p class="text-4xl font-extrabold text-gold">{disp}</p>
+        <p class="text-sm text-white/60 mt-1">lotes disponíveis de {total}</p>
       </div>
     </div>
 
-    <!-- Barra de progresso de vendas -->
-    <div class="reveal mb-12">
+    <!-- Barra de vendas -->
+    <div class="reveal mb-10">
       <div class="flex justify-between text-xs text-white/50 mb-2">
         <span>{pct}% das unidades já reservadas ou vendidas</span>
         <span>{disp} restantes</span>
       </div>
-      <div class="h-2 rounded-full bg-white/10 overflow-hidden">
-        <div
-          class="h-full bg-gold rounded-full transition-all duration-1000"
-          style={`width: ${pct}%`}
-        ></div>
+      <div class="h-1.5 rounded-full bg-white/10 overflow-hidden">
+        <div class="h-full bg-gold rounded-full" style={`width:${pct}%`}></div>
       </div>
     </div>
 
-    <!-- Grid teaser visual dos lotes -->
-    <div class="reveal-children grid grid-cols-10 gap-1 mb-12 max-w-3xl mx-auto opacity-90" aria-hidden="true">
-      {LOTES.filter(l => l.preco > 0).map(l => (
-        <div
-          title={l.id}
+    <!-- Mapa preview com pins -->
+    <div class="reveal relative w-full max-w-2xl mx-auto mb-10 rounded-2xl overflow-hidden shadow-2xl" style="aspect-ratio:1/1;">
+      <img
+        src="https://loteamentojardimcolina.com.br/colina10.webp"
+        alt="Planta do Loteamento Jardim Colina"
+        class="w-full h-full object-cover"
+        loading="lazy"
+      />
+      <!-- Overlay escuro suave -->
+      <div class="absolute inset-0 bg-forest/20"></div>
+
+      <!-- Pins posicionados sobre a imagem -->
+      {pins.map(p => (
+        <span
+          title={p.id}
           class={[
-            'aspect-square rounded-[3px] text-[6px] font-bold flex items-center justify-center text-white/70',
-            l.situacao === 'disponivel' ? 'bg-green-500/70' :
-            l.situacao === 'reservado'  ? 'bg-orange-400/80' :
-            'bg-white/10'
+            'absolute w-2.5 h-2.5 rounded-full -translate-x-1/2 -translate-y-1/2 ring-1 ring-white/40',
+            p.situacao === 'disponivel' ? 'bg-green-400' :
+            p.situacao === 'reservado'  ? 'bg-orange-400' :
+                                          'bg-white/30'
           ].join(' ')}
-        >
-          {l.numero}
-        </div>
+          style={`left:${p.left}%;top:${p.top}%`}
+        />
       ))}
-    </div>
 
-    <!-- Legenda + CTA -->
-    <div class="reveal flex flex-col sm:flex-row items-center justify-center gap-6 mb-10">
-      <div class="flex gap-5 text-sm">
-        <div class="flex items-center gap-2 text-white/70">
-          <span class="w-3 h-3 rounded-full bg-green-500 inline-block"></span> Disponível
-        </div>
-        <div class="flex items-center gap-2 text-white/70">
-          <span class="w-3 h-3 rounded-full bg-orange-400 inline-block"></span> Reservado
-        </div>
-        <div class="flex items-center gap-2 text-white/70">
-          <span class="w-3 h-3 rounded-full bg-white/20 inline-block"></span> Vendido
-        </div>
-      </div>
-    </div>
-
-    <!-- Botão -->
-    <div class="reveal text-center">
+      <!-- CTA central clicável -->
       <a
         href="/lotes"
-        class="inline-flex items-center gap-3 bg-gold text-forest font-bold rounded-full px-8 py-4 text-base hover:bg-gold/90 transition group shadow-lg"
+        class="absolute inset-0 flex items-end justify-center pb-8 group"
+        aria-label="Ver mapa interativo de lotes"
       >
-        Ver mapa interativo de lotes
-        <svg class="h-4 w-4 transition group-hover:translate-x-1" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M3 8h10M9 4l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+        <span class="inline-flex items-center gap-2 bg-gold text-forest font-bold rounded-full px-6 py-3 text-sm shadow-lg group-hover:bg-gold/90 transition">
+          Explorar mapa interativo
+          <svg class="h-4 w-4 transition group-hover:translate-x-0.5" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 8h10M9 4l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
       </a>
-      <p class="mt-4 text-xs text-white/40">
-        Clique em qualquer lote para ver área, valor e simular o financiamento
-      </p>
     </div>
+
+    <!-- Legenda -->
+    <div class="reveal flex items-center justify-center gap-6 text-sm">
+      <div class="flex items-center gap-2 text-white/70">
+        <span class="w-3 h-3 rounded-full bg-green-400 inline-block"></span> Disponível
+      </div>
+      <div class="flex items-center gap-2 text-white/70">
+        <span class="w-3 h-3 rounded-full bg-orange-400 inline-block"></span> Reservado
+      </div>
+      <div class="flex items-center gap-2 text-white/70">
+        <span class="w-3 h-3 rounded-full bg-white/30 inline-block"></span> Vendido
+      </div>
+    </div>
+
+    <p class="reveal text-center mt-4 text-xs text-white/40">
+      Clique no mapa para ver área, valor e simular o financiamento de cada lote
+    </p>
 
   </div>
 </section>

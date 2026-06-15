@@ -33,9 +33,8 @@ const lotesJson = LOTES.map(l => ({
   <link rel="icon" href="/favicon.ico" sizes="any" />
   <meta name="theme-color" content="#15312A" />
 
-  <!-- Leaflet -->
+  <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.3/leaflet.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.3/leaflet.js"></script>
 
   <!-- Fontes -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -249,6 +248,9 @@ const lotesJson = LOTES.map(l => ({
   <input type="range" id="price-range" min="118000" max="268000" step="5000" value="268000" />
   <span id="price-label">Todos os preços</span>
 </div>
+
+<!-- Leaflet JS aqui — garante que L está disponível antes do código do mapa -->
+<script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.3/leaflet.js"></script>
 
 <script define:vars={{ lotesJson, WA_NUMBER }}>
   const brl = v => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 });
