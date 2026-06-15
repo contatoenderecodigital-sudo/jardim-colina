@@ -4,7 +4,7 @@ import { WA_NUMBER } from '~/components/jc/data';
 
 const disp    = lotesDisponiveis();
 const reserv  = lotesReservados();
-const vend    = lotesVendidos();
+const vend    = LOTES.filter(l => l.situacao === 'vendido' || l.situacao === 'bloqueado').length;
 const total   = lotesVendaveis();
 const pctVend = Math.round(((reserv + vend) / total) * 100);
 
@@ -76,7 +76,7 @@ const lotesJson = LOTES.map(l => ({
     .leg-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
     .leg-g { background: #16a34a; }
     .leg-o { background: #eab308; }
-    .leg-d { background: #374151; }
+    .leg-d { background: #6b7280; }
 
     #counts {
       display: flex; gap: 6px; flex-shrink: 0;
@@ -87,7 +87,7 @@ const lotesJson = LOTES.map(l => ({
     }
     .cc-g { background: rgba(22,163,74,.25); border: 1px solid rgba(22,163,74,.6); }
     .cc-o { background: rgba(234,179,8,.25); border: 1px solid rgba(234,179,8,.6); }
-    .cc-d { background: rgba(55,65,81,.4); border: 1px solid rgba(156,163,175,.6); }
+    .cc-d { background: rgba(107,114,128,.3); border: 1px solid rgba(156,163,175,.7); }
 
     /* mobile: esconde título e legenda, mantém só os chips */
     @media (max-width: 640px) {
@@ -135,8 +135,8 @@ const lotesJson = LOTES.map(l => ({
     }
     .lote-marker.disp  { background: #16a34a; }
     .lote-marker.res   { background: #ca8a04; }
-    .lote-marker.vend  { background: #374151; border-color: rgba(255,255,255,.5); }
-    .lote-marker.bloq  { background: #374151; border-color: rgba(255,255,255,.5); }
+    .lote-marker.vend  { background: #6b7280; border-color: rgba(255,255,255,.6); }
+    .lote-marker.bloq  { background: #6b7280; border-color: rgba(255,255,255,.6); }
 
     /* ── OVERLAY ── */
     #panel-overlay {
