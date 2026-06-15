@@ -100,18 +100,14 @@ const lotesJson = LOTES.map(l => ({
     /* ── MAP ── */
     #map { width: 100%; height: 100vh; padding-top: 44px; background: var(--forest); }
 
-    /* Move zoom control para baixo da barra de filtro */
-    .leaflet-control-zoom {
-      margin-bottom: 0 !important;
-    }
+    /* Zoom control: acima da barra de filtro */
     .leaflet-bottom.leaflet-right {
-      margin-bottom: 64px;
-      margin-right: 12px;
+      bottom: 72px !important;
+      right: 16px !important;
     }
     .leaflet-control-zoom a {
-      font-size: 18px !important;
-      line-height: 30px !important;
-      width: 32px !important; height: 32px !important;
+      width: 34px !important; height: 34px !important;
+      line-height: 34px !important; font-size: 18px !important;
     }
 
     /* Pins */
@@ -366,21 +362,18 @@ const lotesJson = LOTES.map(l => ({
 
   const bounds = [[0,0],[500,500]];
 
-  L.imageOverlay(
-    '/colina10.webp',
-    bounds,
-    { opacity: 1, interactive: false }
-  ).addTo(map);
+  L.imageOverlay('/colina10.webp', bounds, { opacity: 1, interactive: false }).addTo(map);
 
-  // Trava o pan dentro da imagem (com margem mínima)
-  map.setMaxBounds(bounds.pad(0.05));
+  // Trava o pan dentro da imagem
+  map.setMaxBounds(bounds);
 
-  // Calcula o zoom mínimo real pra imagem preencher a tela sem fundo atrás
-  map.fitBounds(bounds);
-  const fitZoom = map.getBoundsZoom(bounds, false);
-  map.setMinZoom(fitZoom);
-  map.setMaxZoom(fitZoom + 3); // permite zoom in até ver os lotes de perto
-  map.setZoom(fitZoom);
+  // Ajusta zoom pra imagem preencher a tela — usa whenReady pra garantir que o container tem tamanho real
+  map.whenReady(function() {
+    map.fitBounds(bounds, { padding: [0, 0] });
+    const minZ = map.getZoom();
+    map.setMinZoom(minZ);
+    map.setMaxZoom(minZ + 3);
+  });
 
   // ── PINS ──
   const markers = {};
