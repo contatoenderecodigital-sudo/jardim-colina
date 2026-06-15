@@ -214,17 +214,31 @@ const lotesJson = LOTES.map(l => ({
       border-bottom: 1px solid transparent;
     }
     #simulador-section.open {
-      max-height: 220px; padding: 14px 20px;
+      max-height: 260px; padding: 16px 20px;
       border-bottom-color: #f3f3f3;
     }
-    #simulador-section h4 {
-      font-size: 10px; font-weight: 700; text-transform: uppercase;
-      letter-spacing: .07em; color: #777; margin-bottom: 10px;
+    .sim-select-row {
+      display: flex; gap: 8px; margin-bottom: 14px;
     }
-    .parc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
-    .parc-item { background: #f8f8f8; border-radius: 10px; padding: 8px 6px; text-align: center; }
-    .parc-item .pi-key { display: block; font-size: 10px; color: #777; }
-    .parc-item .pi-val { display: block; font-size: 12px; font-weight: 800; color: var(--forest); margin-top: 2px; }
+    #parc-select {
+      flex: 1; appearance: none; background: #f8f8f8 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23374151' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 12px center;
+      border: 1.5px solid #e5e7eb; border-radius: 10px;
+      padding: 10px 36px 10px 12px; font-size: 13px; font-weight: 700;
+      color: var(--forest); font-family: inherit; cursor: pointer;
+    }
+    #parc-select:focus { outline: none; border-color: var(--forest); }
+    #btn-recalc {
+      background: var(--forest); color: #fff; border: none; border-radius: 10px;
+      padding: 10px 16px; font-size: 13px; font-weight: 800; cursor: pointer;
+      font-family: inherit; white-space: nowrap; transition: background .2s;
+    }
+    #btn-recalc:hover { background: #0f2420; }
+    .sim-result { background: #f8faf8; border-radius: 12px; padding: 12px 14px; }
+    .sim-parc-label { font-size: 11px; color: #777; margin-bottom: 2px; }
+    .sim-parc-val { font-size: 24px; font-weight: 900; color: var(--forest); line-height: 1.1; }
+    .sim-entrada-row { display: flex; align-items: baseline; gap: 6px; margin-top: 8px; padding-top: 8px; border-top: 1px solid #e9f0e9; }
+    .sim-entrada-label { font-size: 11px; color: #777; }
+    .sim-entrada-val { font-size: 15px; font-weight: 800; color: var(--forest); }
 
     /* ── CTAs ── */
     #panel-cta {
@@ -319,8 +333,26 @@ const lotesJson = LOTES.map(l => ({
   </div>
 
   <div id="simulador-section">
-    <h4>Financiamento direto · entrada 20%</h4>
-    <div class="parc-grid" id="panel-parcelas"></div>
+    <div class="sim-select-row">
+      <select id="parc-select">
+        <option value="12x">Parcelado em 12x</option>
+        <option value="18x">Parcelado em 18x</option>
+        <option value="24x" selected>Parcelado em 24x</option>
+        <option value="36x">Parcelado em 36x</option>
+        <option value="48x">Parcelado em 48x</option>
+        <option value="60x">Parcelado em 60x</option>
+        <option value="72x">Parcelado em 72x</option>
+      </select>
+      <button id="btn-recalc">Recalcular</button>
+    </div>
+    <div class="sim-result">
+      <p class="sim-parc-label" id="sim-parc-label">Parcelamento em 24x de</p>
+      <div class="sim-parc-val" id="sim-parc-val">—</div>
+      <div class="sim-entrada-row">
+        <span class="sim-entrada-label">Entrada mínima de</span>
+        <span class="sim-entrada-val" id="sim-entrada-val">—</span>
+      </div>
+    </div>
   </div>
 
   <div id="panel-cta">
@@ -429,11 +461,14 @@ const lotesJson = LOTES.map(l => ({
   });
 
   // ── PANEL ──
-  const panel   = document.getElementById('panel');
-  const overlay = document.getElementById('panel-overlay');
-  const simSec  = document.getElementById('simulador-section');
-  const btnSim  = document.getElementById('btn-simular');
-  let simOpen   = false;
+  const panel      = document.getElementById('panel');
+  const overlay    = document.getElementById('panel-overlay');
+  const simSec     = document.getElementById('simulador-section');
+  const btnSim     = document.getElementById('btn-simular');
+  const parcSelect = document.getElementById('parc-select');
+  const btnRecalc  = document.getElementById('btn-recalc');
+  let simOpen      = false;
+  let currentLote  = null;
 
   function closePanel() {
     panel.classList.remove('open');
@@ -457,10 +492,8 @@ const lotesJson = LOTES.map(l => ({
     document.getElementById('pill-entrada').textContent = l.preco > 0 ? brl(l.preco * 0.2) : '—';
     document.getElementById('pill-avista').textContent  = l.avista > 0 ? brl(l.avista) : '—';
 
-    const keys = ['12x','18x','24x','36x','48x','60x','72x'];
-    document.getElementById('panel-parcelas').innerHTML = keys.map(k =>
-      `<div class="parc-item"><span class="pi-key">${k}</span><span class="pi-val">${l.parcelas[k] > 0 ? brl(l.parcelas[k]) : '—'}</span></div>`
-    ).join('');
+    currentLote = l;
+    atualizarSimulador();
 
     const isDisp = l.situacao === 'disponivel';
     const waBtn  = document.getElementById('panel-wa');
@@ -477,6 +510,17 @@ const lotesJson = LOTES.map(l => ({
     panel.classList.add('open');
     overlay.classList.add('open');
   }
+
+  function atualizarSimulador() {
+    if (!currentLote) return;
+    const key = parcSelect.value;
+    const val = currentLote.parcelas[key];
+    document.getElementById('sim-parc-label').textContent = `Parcelamento em ${key} de`;
+    document.getElementById('sim-parc-val').textContent   = val > 0 ? brl(val) : '—';
+    document.getElementById('sim-entrada-val').textContent = currentLote.entrada > 0 ? brl(currentLote.entrada) : '—';
+  }
+
+  btnRecalc.addEventListener('click', atualizarSimulador);
 
   btnSim.addEventListener('click', () => {
     simOpen = !simOpen;
