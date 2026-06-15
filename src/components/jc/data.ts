@@ -11,19 +11,19 @@ export const waHref = (msg: string = WA_MESSAGE): string =>
 // Enquanto estiver vazio, o formulário ainda funciona: só abre o WhatsApp, sem salvar na planilha.
 export const LEADS_ENDPOINT = '';
 
-// Preço do lote mais barato, exibido como "Lotes a partir de R$X" (qualifica o lead).
-// >>> PLACEHOLDER: usar o preço do MENOR lote (não a média). Trocar pelo valor real antes de publicar. <<<
-// Se deixar vazio (''), some o preço e fica só "Até 72x".
-export const PRECO_LOTE = 'R$ 139.000';
+// Preço do lote mais barato (confirmado na plataforma UMMETRO em 2026-06-15)
+export const PRECO_LOTE = 'R$ 118.000';
 
-// Preço aproximado por m² (PRECO_LOTE ÷ menor metragem). Recalcular se o preço mudar.
-// Ex: 139.000 ÷ 360 ≈ R$ 386/m². Ancoragem de "investimento, não gasto".
-export const PRECO_M2 = 'R$ 386';
+// Preço por m² (118.000 ÷ 397,60 m² do lote A-1, o menor)
+export const PRECO_M2 = 'R$ 297';
 
-// Escassez REAL (não inventar). LOTES_RESERVADOS = 0 deixa a barra escondida.
-// >>> EXEMPLO: 86 reservados (faltam 60). Trocar pelo número VERDADEIRO antes de publicar. <<<
+// Lotes disponíveis em tempo real → alimentado pela página /lotes
+// Mantido aqui como valor estático para o hero/selos enquanto não há SSR
 export const LOTES_TOTAL = 146;
-export const LOTES_RESERVADOS = 86;
+export const LOTES_RESERVADOS = 2; // D-76 e D-77 estão bloqueados como vendidos
+
+// Link para a página de mapa interativo
+export const LOTES_PAGE = '/lotes';
 
 export const NAV = [
   { label: 'O Projeto', href: '#conceito' },
