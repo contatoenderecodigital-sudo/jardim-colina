@@ -136,7 +136,7 @@ const lotesJson = LOTES.map(l => ({
     .lote-marker.disp  { background: #16a34a; }
     .lote-marker.res   { background: #ca8a04; }
     .lote-marker.vend  { background: #dc2626; }
-    .lote-marker.bloq  { display: none; }
+    .lote-marker.bloq  { background: #374151; border-color: rgba(255,255,255,.5); }
 
     /* ── OVERLAY ── */
     #panel-overlay {
@@ -394,8 +394,6 @@ const lotesJson = LOTES.map(l => ({
 
   function createMarkers() {
     lotesJson.forEach(l => {
-      if (l.situacao === 'bloqueado' && l.preco === 0) return; // área comum
-
       const cls = statusClass(l.situacao);
 
       const icon = L.divIcon({
@@ -425,7 +423,7 @@ const lotesJson = LOTES.map(l => ({
     activeFilter = parseInt(priceRange.value);
     priceLabel.textContent = activeFilter >= 268000 ? 'Todos os preços' : `até ${brl(activeFilter)}`;
     Object.values(markers).forEach(({ marker, lote }) => {
-      const visible = lote.preco <= activeFilter || lote.preco === 0 || lote.situacao !== 'disponivel';
+      const visible = lote.situacao !== 'disponivel' || lote.preco <= activeFilter;
       marker.setOpacity(visible ? 1 : 0.15);
     });
   });
