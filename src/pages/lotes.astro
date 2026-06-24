@@ -409,7 +409,7 @@ const lotesJson = LOTES.map(l => ({
 
   L.imageOverlay('/colina10.webp', bounds, { opacity: 1, interactive: false }).addTo(map);
 
-  // Calcula bounds reais do cluster de lotes para encaixar todos na tela
+  // Calcula bounds reais do cluster de lotes
   var minLY = Infinity, maxLY = -Infinity, minLX = Infinity, maxLX = -Infinity;
   lotesJson.forEach(function(l) {
     if (l.py < minLY) minLY = l.py;
@@ -417,21 +417,28 @@ const lotesJson = LOTES.map(l => ({
     if (l.px < minLX) minLX = l.px;
     if (l.px > maxLX) maxLX = l.px;
   });
-  var lotCluster = [[minLY - 10, minLX - 10], [maxLY + 10, maxLX + 10]];
 
   function fitToLots() {
-    map.fitBounds(lotCluster, { padding: [48, 48] });
+    var sz = map.getSize();
+    if (!sz.x || !sz.y) { setTimeout(fitToLots, 50); return; }
+    // Zoom que contém o cluster com 48px de padding em cada lado
+    var pad = 96;
+    var z = Math.min(
+      Math.log2((sz.x - pad) / (maxLX - minLX + 20)),
+      Math.log2((sz.y - pad) / (maxLY - minLY + 20))
+    );
+    // Clamp do centro para a vista nunca vazar fora da imagem [0,500]
+    var scale = Math.pow(2, z);
+    var hW = sz.x / 2 / scale;
+    var hH = sz.y / 2 / scale;
+    var cx = Math.max(hW, Math.min(500 - hW, (minLX + maxLX) / 2));
+    var cy = Math.max(hH, Math.min(500 - hH, (minLY + maxLY) / 2));
+    map.setView([cy, cx], z, { animate: false });
+    map.setMinZoom(z - 0.5);
+    map.setMaxZoom(z + 4);
+    map.setMaxBounds(bounds);
   }
-  fitToLots();
-
-  map.once('moveend', function() {
-    var z = map.getZoom();
-    if (z !== undefined && !isNaN(z)) {
-      map.setMinZoom(z - 0.5);
-      map.setMaxZoom(z + 4);
-      map.setMaxBounds(bounds);
-    }
-  });
+  setTimeout(fitToLots, 0);
   map.on('resize', fitToLots);
 
   // ── PINS ──
