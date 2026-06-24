@@ -119,20 +119,20 @@ const lotesJson = LOTES.map(l => ({
     /* Pins */
     .lote-marker {
       display: flex; flex-direction: column; align-items: center; justify-content: center;
-      width: 40px; height: 40px; border-radius: 50%;
+      width: 30px; height: 30px; border-radius: 50%;
       color: #fff; gap: 0;
-      border: 2.5px solid rgba(255,255,255,.9);
+      border: 2px solid rgba(255,255,255,.9);
       cursor: pointer;
       transition: transform .15s, box-shadow .15s;
-      box-shadow: 0 2px 8px rgba(0,0,0,.5), 0 0 0 1px rgba(0,0,0,.15);
+      box-shadow: 0 2px 6px rgba(0,0,0,.5), 0 0 0 1px rgba(0,0,0,.15);
       text-align: center;
       text-shadow: 0 1px 2px rgba(0,0,0,.5);
     }
     .lote-marker .lm-q {
-      font-size: 7px; font-weight: 700; line-height: 1.1; opacity: .85; letter-spacing: 0;
+      font-size: 6px; font-weight: 700; line-height: 1.1; opacity: .85; letter-spacing: 0;
     }
     .lote-marker .lm-n {
-      font-size: 13px; font-weight: 900; line-height: 1.1; letter-spacing: -.5px;
+      font-size: 10px; font-weight: 900; line-height: 1.1; letter-spacing: -.5px;
     }
     .lote-marker:hover {
       transform: scale(1.25);
@@ -409,19 +409,30 @@ const lotesJson = LOTES.map(l => ({
 
   L.imageOverlay('/colina10.webp', bounds, { opacity: 1, interactive: false }).addTo(map);
 
-  // Cover: zoom pelo maior lado do container — imagem preenche a tela sem borda verde
-  function setFillView() {
-    var sz = map.getSize();
-    if (!sz.x || !sz.y) { setTimeout(setFillView, 50); return; }
-    var z = Math.log2(Math.max(sz.x, sz.y) / 500);
-    // Centro no cluster de lotes (pinY≈333, pinX≈230) em vez do centro geométrico
-    map.setView([333, 230], z, { animate: false });
-    map.setMinZoom(z);
-    map.setMaxZoom(z + 4);
-    map.setMaxBounds(bounds);
+  // Calcula bounds reais do cluster de lotes para encaixar todos na tela
+  var minLY = Infinity, maxLY = -Infinity, minLX = Infinity, maxLX = -Infinity;
+  lotesJson.forEach(function(l) {
+    if (l.py < minLY) minLY = l.py;
+    if (l.py > maxLY) maxLY = l.py;
+    if (l.px < minLX) minLX = l.px;
+    if (l.px > maxLX) maxLX = l.px;
+  });
+  var lotCluster = [[minLY - 10, minLX - 10], [maxLY + 10, maxLX + 10]];
+
+  function fitToLots() {
+    map.fitBounds(lotCluster, { padding: [48, 48] });
   }
-  setTimeout(setFillView, 0);
-  map.on('resize', setFillView);
+  fitToLots();
+
+  map.once('moveend', function() {
+    var z = map.getZoom();
+    if (z !== undefined && !isNaN(z)) {
+      map.setMinZoom(z - 0.5);
+      map.setMaxZoom(z + 4);
+      map.setMaxBounds(bounds);
+    }
+  });
+  map.on('resize', fitToLots);
 
   // ── PINS ──
   const markers = {};
@@ -441,8 +452,8 @@ const lotesJson = LOTES.map(l => ({
       const icon = L.divIcon({
         className: '',
         html: `<div class="lote-marker ${cls}" title="${l.id}"><span class="lm-q">${l.quadra}</span><span class="lm-n">${l.id.split('-')[1]}</span></div>`,
-        iconSize: [40, 40],
-        iconAnchor: [20, 20],
+        iconSize: [30, 30],
+        iconAnchor: [15, 15],
       });
 
       // Leaflet CRS.Simple: lat = y (inverted), lng = x
@@ -589,7 +600,7 @@ const lotesJson = LOTES.map(l => ({
       const icon = L.divIcon({
         className: '',
         html: `<div class="lote-marker ${cls}" title="${l.id}"><span class="lm-q">${l.quadra}</span><span class="lm-n">${l.id.split('-')[1]}</span></div>`,
-        iconSize: [40, 40], iconAnchor: [20, 20],
+        iconSize: [30, 30], iconAnchor: [15, 15],
       });
       entry.marker.setIcon(icon);
     });
