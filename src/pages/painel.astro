@@ -8,151 +8,152 @@ const SUPABASE_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Admin · Loteamento Jardim Colina</title>
+  <title>Painel · Jardim Colina</title>
   <meta name="robots" content="noindex, nofollow" />
   <link rel="icon" href="/favicon.ico" sizes="any" />
-
-  <!-- Supabase JS via CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-
-  <!-- Fontes -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-
-  <style>
+  <style is:global>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --forest: #15312A; --gold: #C2A15B; --paper: #F5EFE3;
-      --green: #22C55E; --orange: #F97316; --dark: #374151; --red: #EF4444;
-    }
-    body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f0f2f0; min-height: 100vh; }
+    :root { --forest: #15312A; --forest2: #1e4035; --border: #e5e7eb; --muted: #9ca3af; --bg: #f3f4f3; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: #111; min-height: 100vh; -webkit-font-smoothing: antialiased; }
 
-    /* ── LOGIN ── */
-    #login-screen {
-      display: flex; align-items: center; justify-content: center;
-      min-height: 100vh; background: var(--forest); padding: 20px;
-    }
-    #login-box {
-      background: #fff; border-radius: 20px; padding: 40px 32px;
-      width: 100%; max-width: 380px; text-align: center;
-    }
-    #login-box h1 { font-size: 22px; font-weight: 800; color: var(--forest); margin-bottom: 4px; }
-    #login-box p  { font-size: 13px; color: #888; margin-bottom: 28px; }
-    .field { text-align: left; margin-bottom: 16px; }
-    .field label { display: block; font-size: 12px; font-weight: 700; color: #555; margin-bottom: 5px; text-transform: uppercase; letter-spacing: .05em; }
-    .field input {
-      width: 100%; border: 1.5px solid #e0e0e0; border-radius: 10px;
-      padding: 11px 14px; font-size: 15px; font-family: inherit; outline: none;
-      transition: border-color .2s;
-    }
-    .field input:focus { border-color: var(--forest); }
-    #btn-login {
-      width: 100%; background: var(--forest); color: #fff;
-      border: none; border-radius: 50px; padding: 14px;
-      font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit;
-      transition: background .2s;
-    }
-    #btn-login:hover { background: #1f4a3a; }
+    /* LOGIN */
+    #login-screen { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: var(--forest); padding: 20px; }
+    .login-card { background: #fff; border-radius: 20px; padding: 36px 28px; width: 100%; max-width: 340px; box-shadow: 0 32px 64px rgba(0,0,0,.25); }
+    .login-logo { display: block; height: 48px; width: auto; margin: 0 auto 24px; }
+    .login-head { margin-bottom: 22px; text-align: center; }
+    .login-head h1 { font-size: 17px; font-weight: 800; color: var(--forest); margin-bottom: 3px; }
+    .login-head p { font-size: 12px; color: var(--muted); }
+    .field { margin-bottom: 12px; }
+    .field label { display: block; font-size: 10px; font-weight: 700; color: var(--muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: .06em; }
+    .field input { width: 100%; border: 1.5px solid var(--border); border-radius: 10px; padding: 11px 13px; font-size: 14px; font-family: inherit; outline: none; transition: border-color .15s; }
+    .field input:focus { border-color: var(--forest); box-shadow: 0 0 0 3px rgba(21,49,42,.1); }
+    #btn-login { width: 100%; background: var(--forest); color: #fff; border: none; border-radius: 10px; padding: 12px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; margin-top: 4px; }
+    #btn-login:hover { background: var(--forest2); }
     #btn-login:disabled { opacity: .5; cursor: default; }
-    #login-error { margin-top: 12px; font-size: 13px; color: var(--red); display: none; }
+    #login-error { margin-top: 10px; font-size: 12px; color: #dc2626; background: #fef2f2; padding: 8px 12px; border-radius: 8px; display: none; }
 
-    /* ── DASHBOARD ── */
+    /* TOPBAR */
     #dashboard { display: none; }
+    .topbar { background: var(--forest); padding: 0 20px; height: 52px; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 50; }
+    .topbar-logo { height: 32px; width: auto; flex-shrink: 0; }
+    .topbar-spacer { flex: 1; }
+    .topbar-email { font-size: 11px; color: rgba(255,255,255,.4); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 160px; }
+    #btn-logout { background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2); color: rgba(255,255,255,.85); border-radius: 8px; padding: 5px 13px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit; flex-shrink: 0; }
+    #btn-logout:hover { background: rgba(255,255,255,.18); }
+    @media (max-width: 480px) { .topbar-email { display: none; } }
 
-    header {
-      background: var(--forest); color: #fff;
-      padding: 14px 24px; display: flex; align-items: center; gap: 16px;
-    }
-    header h1 { font-size: 16px; font-weight: 700; flex: 1; }
-    header span { font-size: 12px; color: rgba(255,255,255,.55); }
-    .role-badge {
-      font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px;
-      background: rgba(255,255,255,.15); color: rgba(255,255,255,.9);
-    }
-    .role-badge.gestor { background: var(--gold); color: var(--forest); }
-    #btn-logout {
-      background: none; border: 1px solid rgba(255,255,255,.3); color: rgba(255,255,255,.8);
-      border-radius: 20px; padding: 5px 14px; font-size: 12px; cursor: pointer; font-family: inherit;
-    }
+    /* STATUS BAR */
+    .status-bar { background: var(--forest); padding: 8px 16px 12px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .chip { display: inline-flex; align-items: center; gap: 6px; border: 1.5px solid rgba(255,255,255,.22); border-radius: 999px; padding: 5px 12px; cursor: pointer; transition: border-color .15s, background .15s; }
+    .chip:hover { border-color: rgba(255,255,255,.45); }
+    .chip.chip-active { border-color: rgba(255,255,255,.65); background: rgba(255,255,255,.1); }
+    .chip-num { font-size: 13px; font-weight: 800; color: #fff; }
+    .chip-label { font-size: 12px; font-weight: 700; color: rgba(255,255,255,.8); text-transform: uppercase; letter-spacing: .04em; }
+    .chip-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+    .dot-disp  { background: #4ade80; }
+    .dot-res   { background: #fbbf24; }
+    .dot-indisp{ background: #f87171; }
+    .sb-legend { display: flex; align-items: center; gap: 12px; margin-left: auto; }
+    .leg { display: flex; align-items: center; gap: 4px; }
+    .leg-dot { width: 7px; height: 7px; border-radius: 50%; }
+    .leg-txt { font-size: 10px; font-weight: 600; color: rgba(255,255,255,.5); text-transform: uppercase; letter-spacing: .05em; }
+    @media (max-width: 600px) { .sb-legend { display: none; } .status-bar { justify-content: center; } }
 
-    .container { max-width: 1100px; margin: 0 auto; padding: 24px 16px; }
-
-    /* stats */
-    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 28px; }
-    .stat-card { background: #fff; border-radius: 14px; padding: 16px 20px; box-shadow: 0 1px 4px rgba(0,0,0,.07); }
-    .stat-card .num { font-size: 28px; font-weight: 800; }
-    .stat-card .lbl { font-size: 12px; color: #888; margin-top: 2px; }
-    .sc-g .num { color: var(--green); }
-    .sc-o .num { color: var(--orange); }
-    .sc-d .num { color: var(--dark); }
-    .sc-t .num { color: var(--forest); }
-
-    /* search */
-    #search-bar { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-    #search-input {
-      flex: 1; min-width: 180px; border: 1.5px solid #ddd; border-radius: 10px;
-      padding: 9px 14px; font-size: 14px; font-family: inherit; outline: none;
-    }
+    /* MAIN */
+    .main { max-width: 900px; margin: 0 auto; padding: 20px 12px; }
+    .toolbar { margin-bottom: 14px; }
+    .search-box { position: relative; width: 100%; max-width: 300px; }
+    .search-box svg { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
+    #search-input { width: 100%; border: 1.5px solid var(--border); border-radius: 10px; padding: 9px 12px 9px 34px; font-size: 13px; font-family: inherit; outline: none; background: #fff; color: #111; }
     #search-input:focus { border-color: var(--forest); }
-    .filter-btn {
-      border: 1.5px solid #ddd; border-radius: 20px; padding: 8px 14px;
-      font-size: 12px; font-weight: 700; cursor: pointer; background: #fff;
-      font-family: inherit; transition: all .2s;
-    }
-    .filter-btn.active { border-color: var(--forest); background: var(--forest); color: #fff; }
+    @media (max-width: 480px) { .search-box { max-width: 100%; } }
 
-    /* tabela */
-    .table-wrap { background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,.07); }
-    table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    th { background: var(--forest); color: rgba(255,255,255,.8); font-size: 11px; font-weight: 700;
-         text-transform: uppercase; letter-spacing: .05em; padding: 10px 14px; text-align: left; }
-    td { padding: 10px 14px; border-bottom: 1px solid #f3f3f3; vertical-align: middle; }
-    tr:last-child td { border-bottom: none; }
-    tr:hover td { background: #fafafa; }
+    /* TABELA */
+    .tbl-wrap { background: #fff; border: 1px solid var(--border); border-radius: 14px; overflow: auto; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+    table { width: 100%; border-collapse: collapse; }
 
-    .badge {
-      display: inline-flex; align-items: center; gap: 4px;
-      border-radius: 20px; padding: 3px 9px;
-      font-size: 11px; font-weight: 700;
+    thead tr { background: #f8faf9; border-bottom: 2px solid #eef0ee; }
+    thead th {
+      padding: 11px 10px;
+      font-size: 10px; font-weight: 800; color: #6b7280;
+      text-transform: uppercase; letter-spacing: .07em;
+      text-align: center; white-space: nowrap;
     }
-    .badge-disp { background: #dcfce7; color: #16a34a; }
-    .badge-res  { background: #ffedd5; color: #ea580c; }
-    .badge-vend { background: #f3f4f6; color: #374151; }
-    .badge-bloq { background: #f3f4f6; color: #9ca3af; font-size: 10px; }
 
-    .status-select {
-      border: 1.5px solid #e0e0e0; border-radius: 8px; padding: 5px 8px;
-      font-size: 12px; font-family: inherit; cursor: pointer; outline: none;
-      background: #fff;
-    }
-    .status-select:focus { border-color: var(--forest); }
+    tbody tr { border-bottom: 1px solid #f1f2f1; transition: background .12s; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: #f8faf8; }
+    tbody td { padding: 11px 8px; vertical-align: middle; text-align: center; }
 
-    .save-btn {
-      background: var(--forest); color: #fff;
-      border: none; border-radius: 8px; padding: 5px 12px;
-      font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit;
-      transition: opacity .2s;
-    }
-    .save-btn:hover { opacity: .85; }
-    .save-btn:disabled { opacity: .4; cursor: default; }
-    .save-btn.saved { background: var(--green); }
+    /* col LOTE */
+    .c-id { display: inline-flex; align-items: center; background: #f0f7f3; color: var(--forest); font-size: 12px; font-weight: 800; border-radius: 7px; padding: 3px 8px; white-space: nowrap; }
 
-    /* msg de config */
-    #config-warning {
-      background: #fffbeb; border: 1px solid #fcd34d; border-radius: 12px;
-      padding: 14px 18px; font-size: 13px; color: #92400e; margin-bottom: 20px;
-      display: none;
+    /* col TAMANHO */
+    .c-m2 { font-size: 12px; color: #4b5563; font-weight: 500; white-space: nowrap; }
+
+    /* col PREÇO */
+    .c-price { font-size: 13px; font-weight: 700; color: #111; white-space: nowrap; }
+
+    /* col STATUS — botão custom */
+    .dd-btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 5px;
+      border-radius: 20px; padding: 6px 10px 6px 11px;
+      font-size: 11px; font-weight: 700; font-family: inherit;
+      cursor: pointer; outline: none; border: 2px solid transparent;
+      transition: opacity .15s, transform .1s;
+      white-space: nowrap; line-height: 1;
+      min-width: 118px;
     }
-    #config-warning code { background: #fef3c7; padding: 1px 5px; border-radius: 4px; font-size: 12px; }
+
+    @media (max-width: 480px) {
+      thead th, tbody td { padding: 8px 4px; }
+      .c-id  { font-size: 10px; padding: 2px 5px; }
+      .c-m2  { font-size: 10px; }
+      .c-price { font-size: 10px; }
+      .dd-btn { font-size: 9px; padding: 4px 6px; gap: 3px; min-width: 0; }
+      .dd-btn svg { width: 8px; height: 8px; }
+    }
+    .dd-btn:hover { opacity: .85; }
+    .dd-btn:active { transform: scale(.97); }
+    .dd-btn.saving { opacity: .4; pointer-events: none; }
+    .dd-btn svg { flex-shrink: 0; transition: transform .15s; }
+    .dd-btn.open svg { transform: rotate(180deg); }
+
+    /* dropdown flutuante — fixed, escapa qualquer overflow */
+    .dd-float {
+      position: fixed; z-index: 9999;
+      background: #fff; border-radius: 12px;
+      box-shadow: 0 8px 28px rgba(0,0,0,.18), 0 0 0 1px rgba(0,0,0,.07);
+      padding: 5px; min-width: 150px;
+      animation: ddIn .12s ease;
+    }
+    @keyframes ddIn { from { opacity:0; transform:translateY(-4px); } to { opacity:1; transform:translateY(0); } }
+    .dd-opt {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 11px; border-radius: 8px;
+      font-size: 12px; font-weight: 700; cursor: pointer;
+      transition: background .1s;
+    }
+    .dd-opt:hover { filter: brightness(.96); }
+    .dd-opt-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .dd-opt-check { margin-left: auto; font-size: 13px; opacity: 0; }
+    .dd-opt.selected .dd-opt-check { opacity: 1; }
   </style>
 </head>
 <body>
 
-<!-- Login -->
+<div id="sb-cfg" data-url={SUPABASE_URL} data-key={SUPABASE_KEY} hidden></div>
+
+<!-- LOGIN -->
 <div id="login-screen">
-  <div id="login-box">
-    <h1>Jardim Colina</h1>
-    <p>Painel administrativo · acesso restrito</p>
+  <div class="login-card">
+    <img src="/jc-logo.png" alt="Jardim Colina" class="login-logo" />
+    <div class="login-head">
+      <h1>Painel Administrativo</h1>
+      <p>Acesso restrito · funcionários</p>
+    </div>
     <div class="field">
       <label>Email</label>
       <input type="email" id="email" placeholder="seu@email.com" autocomplete="email" />
@@ -166,260 +167,233 @@ const SUPABASE_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
   </div>
 </div>
 
-<!-- Dashboard -->
+<!-- DASHBOARD -->
 <div id="dashboard">
-  <header>
-    <h1>Painel · Lotes em Tempo Real</h1>
-    <span id="user-email"></span>
-    <span id="role-badge" class="role-badge" style="display:none"></span>
+  <div class="topbar">
+    <img src="/jc-logo-white.png" alt="Jardim Colina" class="topbar-logo" />
+    <div class="topbar-spacer"></div>
+    <span class="topbar-email" id="user-email"></span>
     <button id="btn-logout">Sair</button>
-  </header>
+  </div>
 
-  <div class="container">
-    <div id="config-warning">
-      <strong>Supabase não configurado.</strong> Os dados mostrados são estáticos. Para ativar atualizações em tempo real, defina as variáveis de ambiente <code>PUBLIC_SUPABASE_URL</code> e <code>PUBLIC_SUPABASE_ANON_KEY</code> no painel do Vercel.
+  <div class="status-bar">
+    <div class="chip chip-active" data-filter="todos">
+      <span class="chip-num" id="cnt-total">—</span>
+      <span class="chip-label">Total</span>
+    </div>
+    <div class="chip" data-filter="disponivel">
+      <span class="chip-dot dot-disp"></span>
+      <span class="chip-num" id="cnt-disp">—</span>
+      <span class="chip-label">Disponíveis</span>
+    </div>
+    <div class="chip" data-filter="reservado">
+      <span class="chip-dot dot-res"></span>
+      <span class="chip-num" id="cnt-res">—</span>
+      <span class="chip-label">Reservados</span>
+    </div>
+    <div class="chip" data-filter="vendido">
+      <span class="chip-dot dot-indisp"></span>
+      <span class="chip-num" id="cnt-indisp">—</span>
+      <span class="chip-label">Indisponíveis</span>
+    </div>
+    <div class="sb-legend">
+      <div class="leg"><div class="leg-dot" style="background:#4ade80"></div><span class="leg-txt">Disponível</span></div>
+      <div class="leg"><div class="leg-dot" style="background:#fbbf24"></div><span class="leg-txt">Reservado</span></div>
+      <div class="leg"><div class="leg-dot" style="background:#f87171"></div><span class="leg-txt">Indisponível</span></div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="toolbar">
+      <div class="search-box">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input type="text" id="search-input" placeholder="Buscar lote (ex: B-22)..." />
+      </div>
     </div>
 
-    <div class="stats" id="stats-grid"></div>
-
-    <div id="search-bar">
-      <input type="text" id="search-input" placeholder="Buscar lote (ex: B-22)..." />
-      <button class="filter-btn active" data-filter="todos">Todos</button>
-      <button class="filter-btn" data-filter="disponivel">Disponíveis</button>
-      <button class="filter-btn" data-filter="reservado">Reservados</button>
-      <button class="filter-btn" data-filter="vendido">Vendidos</button>
-    </div>
-
-    <div class="table-wrap">
+    <div class="tbl-wrap">
       <table>
         <thead>
           <tr>
             <th>Lote</th>
-            <th>Quadra</th>
-            <th>Área</th>
+            <th class="col-m2">Tamanho</th>
             <th>Preço</th>
-            <th>Status atual</th>
-            <th>Alterar para</th>
-            <th></th>
+            <th>Status</th>
           </tr>
         </thead>
-        <tbody id="lotes-tbody"></tbody>
+        <tbody id="tbody"></tbody>
       </table>
     </div>
   </div>
 </div>
 
-<script define:vars={{ SUPABASE_URL, SUPABASE_KEY }}>
-  const hasSupabase = !!(SUPABASE_URL && SUPABASE_KEY);
-  let supabaseClient = null;
+<script>
+  import { createClient } from '@supabase/supabase-js';
 
-  if (hasSupabase && window.supabase) {
-    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-  }
+  const cfg = document.getElementById('sb-cfg');
+  const sb  = createClient(cfg.dataset.url, cfg.dataset.key);
 
-  // ── DADOS LOCAIS (fallback sem Supabase) ────────────────────────────────────
-  // Importados via inline JSON (Astro injeta ao build)
-  // Por ora, carregamos via fetch do endpoint local
-  let lotesData = [];
+  const loginScreen = document.getElementById('login-screen');
+  const dashboard   = document.getElementById('dashboard');
+  const btnLogin    = document.getElementById('btn-login');
+  const loginError  = document.getElementById('login-error');
+  const emailEl     = document.getElementById('email');
+  const senhaEl     = document.getElementById('senha');
 
-  async function carregarLotes() {
-    if (hasSupabase && supabaseClient) {
-      const { data, error } = await supabaseClient.from('lotes').select('*').order('id');
-      if (!error && data) return data;
-    }
-    // Fallback: dados estáticos do arquivo gerado ao build
-    const r = await fetch('/lotes-data.json');
-    if (r.ok) return r.json();
-    return [];
-  }
-
-  // ── AUTH ─────────────────────────────────────────────────────────────────────
-  const DEMO_PASSWORD = 'jardimcolina2026'; // senha demo local (sem Supabase)
-  const DEMO_EMAIL    = 'admin@jardimcolina.com.br';
-
-  const loginScreen  = document.getElementById('login-screen');
-  const dashboard    = document.getElementById('dashboard');
-  const btnLogin     = document.getElementById('btn-login');
-  const loginError   = document.getElementById('login-error');
-  const emailInput   = document.getElementById('email');
-  const senhaInput   = document.getElementById('senha');
-
-  // Tecla Enter no form
-  senhaInput.addEventListener('keydown', e => { if (e.key === 'Enter') btnLogin.click(); });
-
+  senhaEl.addEventListener('keydown', e => { if (e.key === 'Enter') btnLogin.click(); });
   btnLogin.addEventListener('click', async () => {
-    const email = emailInput.value.trim();
-    const senha = senhaInput.value;
-    btnLogin.disabled = true;
-    loginError.style.display = 'none';
-
-    if (hasSupabase && supabaseClient) {
-      const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password: senha });
-      if (error) {
-        loginError.textContent = 'Email ou senha incorretos.';
-        loginError.style.display = 'block';
-        btnLogin.disabled = false;
-        return;
-      }
-      const role = data.user?.user_metadata?.role ?? 'funcionario';
-      mostrarDashboard(email, role);
-    } else {
-      // Modo demo local (sem Supabase)
-      if (email === DEMO_EMAIL && senha === DEMO_PASSWORD) {
-        mostrarDashboard(email, 'gestor');
-      } else {
-        loginError.textContent = 'Credenciais inválidas. (Modo demo: use o email e senha fornecidos pela equipe)';
-        loginError.style.display = 'block';
-        btnLogin.disabled = false;
-      }
-    }
+    btnLogin.disabled = true; loginError.style.display = 'none';
+    const { data, error } = await sb.auth.signInWithPassword({ email: emailEl.value.trim(), password: senhaEl.value });
+    if (error) { loginError.textContent = 'Email ou senha incorretos.'; loginError.style.display = 'block'; btnLogin.disabled = false; return; }
+    entrar(data.user.email);
   });
-
   document.getElementById('btn-logout').addEventListener('click', async () => {
-    if (supabaseClient) await supabaseClient.auth.signOut();
-    loginScreen.style.display = 'flex';
-    dashboard.style.display   = 'none';
-    emailInput.value = '';
-    senhaInput.value = '';
+    await sb.auth.signOut();
+    loginScreen.style.display = 'flex'; dashboard.style.display = 'none';
+    emailEl.value = ''; senhaEl.value = '';
   });
+  sb.auth.getSession().then(({ data: { session } }) => { if (session) entrar(session.user.email); });
 
-  async function mostrarDashboard(email, role = 'funcionario') {
-    loginScreen.style.display = 'none';
-    dashboard.style.display   = 'block';
+  let lotesData = [];
+  let filtro = 'todos';
+
+  async function entrar(email) {
+    loginScreen.style.display = 'none'; dashboard.style.display = 'block';
     document.getElementById('user-email').textContent = email;
-
-    const badge = document.getElementById('role-badge');
-    badge.style.display = 'inline-block';
-    if (role === 'gestor') {
-      badge.textContent = 'Gestor';
-      badge.classList.add('gestor');
-    } else {
-      badge.textContent = 'Funcionário';
-    }
-
-    if (!hasSupabase) {
-      document.getElementById('config-warning').style.display = 'block';
-    }
-
-    lotesData = await carregarLotes();
-    renderTabela(lotesData);
-    renderStats(lotesData);
+    const r = await fetch('/lotes-data.json');
+    lotesData = r.ok ? await r.json() : [];
+    const { data: ov } = await sb.from('lote_status').select('id, situacao');
+    if (ov) ov.forEach(o => { const l = lotesData.find(x => x.id === o.id); if (l) l.situacao = o.situacao; });
+    renderStats(); renderTabela();
   }
 
-  // ── TABELA ───────────────────────────────────────────────────────────────────
   const brl = v => v > 0 ? v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }) : '—';
   const m2  = v => v > 0 ? v.toFixed(2).replace('.', ',') + ' m²' : '—';
 
-  const BADGE = {
-    disponivel: '<span class="badge badge-disp">● Disponível</span>',
-    reservado:  '<span class="badge badge-res">● Reservado</span>',
-    vendido:    '<span class="badge badge-vend">● Vendido</span>',
-    bloqueado:  '<span class="badge badge-bloq">Área</span>',
-  };
+  function normSit(sit) { return (sit === 'bloqueado' || sit === 'vendido') ? 'vendido' : (sit || 'disponivel'); }
 
-  let currentFilter = 'todos';
+  const OPTS = [
+    { v: 'disponivel', label: 'Disponível',   bg: '#dcfce7', color: '#166534', dot: '#16a34a', border: '#86efac' },
+    { v: 'reservado',  label: 'Reservado',    bg: '#fef9c3', color: '#854d0e', dot: '#ca8a04', border: '#fde047' },
+    { v: 'vendido',    label: 'Indisponível', bg: '#fee2e2', color: '#991b1b', dot: '#dc2626', border: '#fca5a5' },
+  ];
 
-  function renderTabela(lotes) {
-    const query  = document.getElementById('search-input').value.toLowerCase();
-    const tbody  = document.getElementById('lotes-tbody');
+  function ddLabel(v) {
+    const o = OPTS.find(x => x.v === v) || OPTS[2];
+    return `<span style="background:${o.dot};width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:2px"></span>${o.label}<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="margin-left:4px"><path d="M6 9l6 6 6-6"/></svg>`;
+  }
 
-    const filtered = lotes.filter(l => {
-      if (l.situacao === 'bloqueado' && l.preco === 0) return false; // oculta áreas comuns
-      const matchFilter = currentFilter === 'todos' || l.situacao === currentFilter;
-      const matchSearch = !query || l.id.toLowerCase().includes(query) || l.quadra.toLowerCase().includes(query);
-      return matchFilter && matchSearch;
-    });
+  function applyBtnStyle(btn, v) {
+    const o = OPTS.find(x => x.v === v) || OPTS[2];
+    btn.style.background = o.bg;
+    btn.style.color = o.color;
+    btn.style.borderColor = o.border;
+    btn.dataset.v = v;
+    btn.innerHTML = ddLabel(v);
+  }
 
-    tbody.innerHTML = filtered.map(l => `
-      <tr data-id="${l.id}">
-        <td><strong>${l.id}</strong></td>
-        <td>${l.quadra}</td>
-        <td>${m2(l.metragem)}</td>
-        <td>${brl(l.preco)}</td>
-        <td>${BADGE[l.situacao] || l.situacao}</td>
-        <td>
-          <select class="status-select" data-id="${l.id}" data-current="${l.situacao}">
-            <option value="disponivel" ${l.situacao==='disponivel'?'selected':''}>Disponível</option>
-            <option value="reservado"  ${l.situacao==='reservado' ?'selected':''}>Reservado</option>
-            <option value="vendido"    ${l.situacao==='vendido'   ?'selected':''}>Vendido</option>
-          </select>
-        </td>
-        <td>
-          <button class="save-btn" data-id="${l.id}">Salvar</button>
-        </td>
-      </tr>
-    `).join('');
+  // ── DROPDOWN FLUTUANTE ──
+  let floatMenu = null;
+  let activeBtn = null;
 
-    // eventos
-    tbody.querySelectorAll('.save-btn').forEach(btn => {
-      btn.addEventListener('click', async () => {
-        const id  = btn.dataset.id;
-        const sel = tbody.querySelector(`.status-select[data-id="${id}"]`);
-        const novoStatus = sel.value;
-        btn.disabled = true;
-        btn.textContent = '…';
+  function closeFloat() {
+    if (floatMenu) { floatMenu.remove(); floatMenu = null; }
+    if (activeBtn) { activeBtn.classList.remove('open'); activeBtn = null; }
+  }
 
-        const ok = await atualizarStatus(id, novoStatus);
-        if (ok) {
-          btn.textContent = '✓';
-          btn.classList.add('saved');
-          // atualiza local
+  document.addEventListener('click', closeFloat);
+  document.addEventListener('scroll', closeFloat, true);
+
+  function openFloat(btn) {
+    closeFloat();
+    const id = btn.dataset.id;
+    const cur = btn.dataset.v;
+
+    const rect = btn.getBoundingClientRect();
+    const menu = document.createElement('div');
+    menu.className = 'dd-float';
+    menu.style.top  = (rect.bottom + 4) + 'px';
+    menu.style.left = rect.left + 'px';
+
+    OPTS.forEach(o => {
+      const item = document.createElement('div');
+      item.className = 'dd-opt' + (o.v === cur ? ' selected' : '');
+      item.style.background = o.bg;
+      item.style.color = o.color;
+      item.innerHTML = `<span class="dd-opt-dot" style="background:${o.dot}"></span>${o.label}<span class="dd-opt-check">✓</span>`;
+      item.addEventListener('click', async e => {
+        e.stopPropagation();
+        closeFloat();
+        btn.classList.add('saving');
+        const { error } = await sb.from('lote_status').upsert({ id, situacao: o.v }, { onConflict: 'id' });
+        btn.classList.remove('saving');
+        if (!error) {
           const lote = lotesData.find(l => l.id === id);
-          if (lote) lote.situacao = novoStatus;
-          renderStats(lotesData);
-          // restore
-          setTimeout(() => { btn.textContent = 'Salvar'; btn.classList.remove('saved'); btn.disabled = false; }, 1800);
-        } else {
-          btn.textContent = 'Erro';
-          btn.disabled = false;
+          if (lote) lote.situacao = o.v;
+          applyBtnStyle(btn, o.v);
+          renderStats();
         }
       });
+      menu.appendChild(item);
+    });
+
+    menu.addEventListener('click', e => e.stopPropagation());
+    document.body.appendChild(menu);
+    floatMenu = menu;
+    activeBtn = btn;
+    btn.classList.add('open');
+  }
+
+  function renderTabela() {
+    const q = (document.getElementById('search-input').value || '').toLowerCase();
+    const tbody = document.getElementById('tbody');
+
+    const rows = lotesData.filter(l => {
+      const ns = normSit(l.situacao);
+      const matchF = filtro === 'todos' || ns === filtro;
+      const matchQ = !q || l.id.toLowerCase().includes(q) || (l.quadra || '').toLowerCase().includes(q);
+      return matchF && matchQ;
+    });
+
+    tbody.innerHTML = rows.map(l => {
+      const ns = normSit(l.situacao);
+      return `<tr data-id="${l.id}">
+        <td><span class="c-id">${l.id}</span></td>
+        <td class="c-m2">${m2(l.metragem)}</td>
+        <td class="c-price">${l.preco > 0 ? brl(l.preco) : '—'}</td>
+        <td><button class="dd-btn" data-id="${l.id}" data-v="${ns}">${ddLabel(ns)}</button></td>
+      </tr>`;
+    }).join('');
+
+    // Aplica estilos de cor nos botões e listeners
+    tbody.querySelectorAll('.dd-btn').forEach(btn => {
+      applyBtnStyle(btn, btn.dataset.v);
+      btn.addEventListener('click', e => { e.stopPropagation(); openFloat(btn); });
     });
   }
 
-  async function atualizarStatus(id, status) {
-    if (hasSupabase && supabaseClient) {
-      const { error } = await supabaseClient.from('lotes').update({ situacao: status }).eq('id', id);
-      return !error;
-    }
-    // sem Supabase: apenas atualiza local (demo)
-    return true;
+  function renderStats() {
+    const disp   = lotesData.filter(l => l.situacao === 'disponivel').length;
+    const res    = lotesData.filter(l => l.situacao === 'reservado').length;
+    const indisp = lotesData.filter(l => l.situacao === 'vendido' || l.situacao === 'bloqueado').length;
+    document.getElementById('cnt-total').textContent  = disp + res + indisp;
+    document.getElementById('cnt-disp').textContent   = disp;
+    document.getElementById('cnt-res').textContent    = res;
+    document.getElementById('cnt-indisp').textContent = indisp;
   }
 
-  function renderStats(lotes) {
-    const vend = lotes.filter(l => l.preco > 0);
-    const disp = vend.filter(l => l.situacao === 'disponivel').length;
-    const res  = vend.filter(l => l.situacao === 'reservado').length;
-    const v    = vend.filter(l => l.situacao === 'vendido').length;
-    document.getElementById('stats-grid').innerHTML = `
-      <div class="stat-card sc-t"><div class="num">${vend.length}</div><div class="lbl">Total vendáveis</div></div>
-      <div class="stat-card sc-g"><div class="num">${disp}</div><div class="lbl">Disponíveis</div></div>
-      <div class="stat-card sc-o"><div class="num">${res}</div><div class="lbl">Reservados</div></div>
-      <div class="stat-card sc-d"><div class="num">${v}</div><div class="lbl">Vendidos</div></div>
-    `;
-  }
-
-  // ── FILTROS ───────────────────────────────────────────────────────────────────
-  document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      currentFilter = btn.dataset.filter;
-      renderTabela(lotesData);
+  document.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('chip-active'));
+      chip.classList.add('chip-active');
+      filtro = chip.dataset.filter;
+      renderTabela();
     });
   });
 
-  document.getElementById('search-input').addEventListener('input', () => renderTabela(lotesData));
-
-  // ── SESSÃO PERSISTENTE ────────────────────────────────────────────────────────
-  if (hasSupabase && supabaseClient) {
-    supabaseClient.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        const role = session.user?.user_metadata?.role ?? 'funcionario';
-        mostrarDashboard(session.user.email, role);
-      }
-    });
-  }
+  document.getElementById('search-input').addEventListener('input', renderTabela);
 </script>
 </body>
 </html>

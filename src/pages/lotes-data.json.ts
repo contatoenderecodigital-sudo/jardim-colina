@@ -5,7 +5,6 @@ import { LOTES } from '~/data/lotes-data';
 
 export const GET: APIRoute = () => {
   const payload = LOTES
-    .filter(l => l.preco > 0)
     .map(l => ({
       id:        l.id,
       quadra:    l.quadra,

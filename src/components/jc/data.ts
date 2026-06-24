@@ -17,10 +17,11 @@ export const PRECO_LOTE = 'R$ 118.000';
 // Preço por m² (118.000 ÷ 397,60 m² do lote A-1, o menor)
 export const PRECO_M2 = 'R$ 297';
 
-// Lotes disponíveis em tempo real → alimentado pela página /lotes
-// Mantido aqui como valor estático para o hero/selos enquanto não há SSR
-export const LOTES_TOTAL = 146;
-export const LOTES_RESERVADOS = 2; // D-76 e D-77 estão bloqueados como vendidos
+import { LOTES } from '~/data/lotes-data';
+
+export const LOTES_TOTAL = LOTES.length;
+// Calcula direto da fonte: todos que não estão "disponivel"
+export const LOTES_RESERVADOS = LOTES.filter(l => l.situacao !== 'disponivel').length;
 
 // Link para a página de mapa interativo
 export const LOTES_PAGE = '/lotes';
